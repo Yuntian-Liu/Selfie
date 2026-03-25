@@ -99,6 +99,27 @@ const techProjects: Project[] = [
   }
 ];
 
+const worldProjects: Project[] = [
+  {
+    id: 'houhai',
+    title: '厚海教育 助教老师',
+    category: 'Internship',
+    icon: '💼',
+    role: '英语助教',
+    isFlagship: false,
+    layoutClass: 'span-2 bg-yellow',
+    tagClass: 'bg-black text-white',
+    images: ['/images/Work_1.jpg', '/images/Work_2.jpg', '/images/Work_3.jpg', '/images/Work_4.jpg'],
+    shortDesc: '入职时间：2025.09。负责英语作业批改与辅导。在实践中发现痛点，并独立开发 Gradify 自动化批改系统，服务百余名学员，有效释放教学人力，实现技术赋能教育。',
+    details: [
+      '入职时间：2025.09',
+      '负责英语作业批改与辅导，跟进学生学习进度。',
+      '在实践中发现痛点，并独立开发 Gradify 自动化批改系统，服务百余名学员。',
+      '有效释放教学人力，实现技术赋能教育。'
+    ]
+  }
+];
+
 export default function App() {
   const [currentFilter, setCurrentFilter] = useState('all');
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
@@ -291,7 +312,7 @@ export default function App() {
           </div>
 
           <div className="action-buttons-group">
-              <button className="brutal-btn bg-white">简历下载</button>
+              <a href="/resume.pdf" download="刘云天_简历.pdf" className="brutal-btn bg-white inline-block text-center no-underline text-black">简历下载</a>
               <button className="brutal-btn bg-yellow" onClick={transitionToLevel2}>展开全景宇宙 ↗</button>
           </div>
 
@@ -450,17 +471,41 @@ export default function App() {
 
                       {/* ==================== 奇思妙想 (tech) ==================== */}
                       
-                      <div className="brutal-card span-2 bg-white overflow-hidden" data-category="tech" style={{display: 'none'}}>
+                      <div className="brutal-card span-2 bg-white overflow-hidden flex flex-col" data-category="tech" style={{display: 'none'}}>
                           <div className="card-watermark">🛠️</div>
                           <div className="card-header">
                               <div className="card-tag bg-black text-white">Tech Stack</div>
                               <div className="card-icon">🛠️</div>
                           </div>
                           <h3 className="brutal-font">技能栈</h3>
-                          <p className="bold-cn">
-                              <strong>AI算法:</strong> PyTorch, Transformer, LLM微调(LoRA), LangGraph, MCTS, RL, ResNet, CV.<br/><br/>
-                              <strong>全栈工程:</strong> Python, JavaScript, TypeScript, React, Tailwind CSS, FastAPI.
-                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4 relative z-10 flex-grow">
+                              <div className="border-4 border-black p-4 bg-yellow transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111]">
+                                  <h4 className="font-black text-lg mb-2 border-b-4 border-black pb-1">🤖 AI 算法</h4>
+                                  <p className="bold-cn text-sm leading-relaxed">PyTorch, Transformer, LLM微调(LoRA), LangGraph, MCTS, RL, ResNet, CV</p>
+                              </div>
+                              <div className="border-4 border-black p-4 bg-blue text-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111]">
+                                  <h4 className="font-black text-lg mb-2 border-b-4 border-white pb-1">💻 全栈工程</h4>
+                                  <p className="bold-cn text-sm leading-relaxed">Python, JavaScript, TypeScript, React, Tailwind CSS, FastAPI</p>
+                              </div>
+                              <div className="border-4 border-black p-4 bg-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_#111]">
+                                  <h4 className="font-black text-lg mb-2 border-b-4 border-black pb-1">📚 学科知识</h4>
+                                  <p className="bold-cn text-sm leading-relaxed">化学, 英语, 概率论与数理统计, 数电, MATLAB</p>
+                              </div>
+                          </div>
+                          {/* Decorative Footer to fill space */}
+                          <div className="mt-auto pt-6 relative z-10">
+                              <div className="border-t-4 border-black pt-3 flex justify-between items-center">
+                                  <div className="font-mono text-sm font-bold flex items-center gap-2">
+                                      <span className="inline-block w-3 h-3 bg-[#00FF00] rounded-full animate-pulse border-2 border-black"></span>
+                                      SYSTEM_ONLINE // KNOWLEDGE_BASE_EXPANDING...
+                                  </div>
+                                  <div className="flex gap-1 hidden sm:flex">
+                                      {[1,2,3,4,5].map(i => (
+                                          <div key={i} className={`w-6 h-3 border-2 border-black ${i <= 3 ? 'bg-black' : 'bg-transparent'}`}></div>
+                                      ))}
+                                  </div>
+                              </div>
+                          </div>
                       </div>
 
                       <div className="brutal-card bg-yellow overflow-hidden" data-category="tech" style={{display: 'none'}}>
@@ -470,10 +515,30 @@ export default function App() {
                               <div className="card-icon">☁️</div>
                           </div>
                           <h3 className="brutal-font">设备与云端</h3>
-                          <p className="bold-cn">
-                              <strong>硬件算力:</strong> 联想 Y9000P<br/>
-                              <strong>云端基建:</strong> Supabase (BaaS), Netlify, Serverless 架构, 云原生部署。
-                          </p>
+                          <div className="mt-4 space-y-4 relative z-10">
+                              <div className="bg-white border-4 border-black p-3 shadow-[4px_4px_0px_#111]">
+                                  <h4 className="font-black text-md mb-2 flex items-center gap-2"><span className="text-xl">💻</span> 硬件算力</h4>
+                                  <ul className="bold-cn text-sm space-y-1">
+                                      <li><strong>CPU:</strong> Intel Ultra 9</li>
+                                      <li><strong>GPU:</strong> NVIDIA RTX 5070 Ti</li>
+                                  </ul>
+                              </div>
+                              <div className="bg-black text-white border-4 border-black p-3 shadow-[4px_4px_0px_#fff]">
+                                  <h4 className="font-black text-md mb-2 flex items-center gap-2"><span className="text-xl">☁️</span> 云端基建</h4>
+                                  <ul className="bold-cn text-sm space-y-1 mb-3">
+                                      <li><strong>服务器:</strong> Ubuntu 22.04 LTS</li>
+                                      <li><strong>架构:</strong> Supabase, Netlify, Serverless</li>
+                                  </ul>
+                                  <div className="border-t-2 border-dashed border-gray-600 pt-3 mt-2">
+                                      <strong className="text-sm block mb-2 text-yellow">🌐 个人域名矩阵:</strong>
+                                      <div className="flex flex-wrap gap-2">
+                                          {['ytunx.com', 'ytunx.cn', 'ytun.com.cn', 'ytun.team', 'ytun.ltd'].map(domain => (
+                                              <span key={domain} className="border-2 border-white px-1.5 py-0.5 text-xs font-bold bg-black text-white">{domain}</span>
+                                          ))}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
 
                       {techProjects.map((project) => (
@@ -490,7 +555,7 @@ export default function App() {
                               </div>
                               
                               <div className={`img-stack ${project.images.length === 2 ? 'dual-stack' : ''} pointer-events-none`}>
-                                  {project.images.map((img, idx) => (
+                                  {project.images.slice(0, 3).map((img, idx) => (
                                       <img key={idx} src={img} alt={`${project.title} ${idx + 1}`} className={`stack-img img-${idx + 1} brutal-filter`} />
                                   ))}
                               </div>
@@ -524,15 +589,51 @@ export default function App() {
 
                       {/* ==================== 大千世界 (world) ==================== */}
                       
-                      <div className="brutal-card span-2 bg-yellow overflow-hidden" data-category="world" style={{display: 'none'}}>
-                          <div className="card-watermark">💼</div>
-                          <div className="card-header">
-                              <div className="card-tag bg-black text-white">Internship</div>
-                              <div className="card-icon">💼</div>
+                      {worldProjects.map((project) => (
+                          <div 
+                              key={project.id} 
+                              className={`brutal-card overflow-hidden ${project.layoutClass}`} 
+                              data-category="world" 
+                              style={{display: 'none'}}
+                              onClick={() => openProjectModal(project)}
+                          >
+                              <div className="card-header">
+                                  <div className={`card-tag ${project.tagClass}`}>{project.category}</div>
+                                  <div className="card-icon">{project.icon}</div>
+                              </div>
+                              
+                              <div className={`img-stack ${project.images.length === 2 ? 'dual-stack' : ''} pointer-events-none`}>
+                                  {project.images.slice(0, 3).map((img, idx) => (
+                                      <img key={idx} src={img} alt={`${project.title} ${idx + 1}`} className={`stack-img img-${idx + 1} brutal-filter`} />
+                                  ))}
+                              </div>
+                              
+                              <h3 className="brutal-font">{project.title}</h3>
+                              
+                              <div className="badge-container">
+                                  {project.isFlagship && <span className="badge-flagship">🌟 旗舰项目</span>}
+                                  <span className="badge-role">👨‍💻 {project.role}</span>
+                              </div>
+                              
+                              <p className="bold-cn">{project.shortDesc}</p>
+                              
+                              <div className="card-footer">
+                                  <div className="text-sm font-bold underline">点击查看详情 ↗</div>
+                                  <div className="card-links">
+                                      {project.githubUrl && (
+                                          <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="icon-link" title="GitHub">
+                                              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                          </a>
+                                      )}
+                                      {project.liveUrls && project.liveUrls.length > 0 && (
+                                          <a href={project.liveUrls[0].url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="icon-link" title="Live Site">
+                                              <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                          </a>
+                                      )}
+                                  </div>
+                              </div>
                           </div>
-                          <h3 className="brutal-font">厚海教育 助教老师</h3>
-                          <p className="bold-cn">负责英语作业批改与辅导。在实践中发现痛点，并独立开发 Gradify 自动化批改系统，服务百余名学员，有效释放教学人力，实现技术赋能教育。</p>
-                      </div>
+                      ))}
 
                       <div className="brutal-card bg-black text-white overflow-hidden" data-category="world" style={{display: 'none'}}>
                           <div className="card-watermark">🚀</div>
@@ -546,14 +647,69 @@ export default function App() {
 
                       {/* ==================== 灵魂与温度 (soul) ==================== */}
                       
-                      <div className="brutal-card span-2 bg-blue text-white overflow-hidden" data-category="soul" style={{display: 'none'}}>
+                      <div className="brutal-card span-3 bg-blue text-white overflow-hidden" data-category="soul" style={{display: 'none'}}>
                           <div className="card-watermark">💌</div>
-                          <div className="card-header">
-                              <div className="card-tag bg-black text-white">Humanities Coordinate</div>
-                              <div className="card-icon">💌</div>
+                          <div className="flex flex-col md:flex-row gap-8 relative z-10 w-full">
+                              {/* Left side */}
+                              <div className="md:w-1/3 flex flex-col justify-center">
+                                  <div className="card-header">
+                                      <div className="card-tag bg-black text-white">Humanities Coordinate</div>
+                                      <div className="card-icon">💌</div>
+                                  </div>
+                                  <h3 className="brutal-font">人文坐标</h3>
+                                  <p className="bold-cn mt-2">担任蓝信封通信大使，累计志愿服务时长 100+ 小时。用书信陪伴乡村儿童成长，在冰冷的代码世界之外，传递人性的温暖与关怀。</p>
+                              </div>
+                              {/* Right side */}
+                              <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                  {/* Item 1 */}
+                                  <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
+                                      <img src="/images/MAIL.png" alt="蓝信封" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <div>
+                                          <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
+                                              蓝信封 
+                                              <a href="https://mp.weixin.qq.com/s/Dgeaefqq7v0N1eaQP9kehA" target="_blank" rel="noopener noreferrer" className="text-yellow hover:text-white" onClick={(e) => e.stopPropagation()}>
+                                                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                              </a>
+                                          </h4>
+                                          <p className="text-sm opacity-80 font-bold mt-1">2025.10—至今</p>
+                                      </div>
+                                  </div>
+                                  {/* Item 2 */}
+                                  <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
+                                      <img src="/images/Volunteer_1.jpg" alt="迎新志愿者" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <div>
+                                          <h4 className="font-bold text-lg brutal-font tracking-wide">2025级开学迎新志愿者</h4>
+                                          <p className="text-sm opacity-80 font-bold mt-1">2025.09.07</p>
+                                      </div>
+                                  </div>
+                                  {/* Item 3 */}
+                                  <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
+                                      <img src="/images/OFO.png" alt="单车猎人行动" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <div>
+                                          <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
+                                              单车猎人行动
+                                              <a href="https://mp.weixin.qq.com/s/cMWpKK1iwAYdYyT1nqr3sA" target="_blank" rel="noopener noreferrer" className="text-yellow hover:text-white" onClick={(e) => e.stopPropagation()}>
+                                                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                              </a>
+                                          </h4>
+                                          <p className="text-sm opacity-80 font-bold mt-1">2017.01—2018.06</p>
+                                      </div>
+                                  </div>
+                                  {/* Item 4 */}
+                                  <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
+                                      <img src="/images/TAI.png" alt="诗琳通公主访华" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <div>
+                                          <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
+                                              诗琳通公主访华
+                                              <a href="https://mp.weixin.qq.com/s/oIh-6JUrhOcxSTF1YznmYw" target="_blank" rel="noopener noreferrer" className="text-yellow hover:text-white" onClick={(e) => e.stopPropagation()}>
+                                                  <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" strokeWidth="2" fill="none"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                              </a>
+                                          </h4>
+                                          <p className="text-sm opacity-80 font-bold mt-1">2018.04.07</p>
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
-                          <h3 className="brutal-font">人文坐标</h3>
-                          <p className="bold-cn">担任蓝信封通信大使，累计志愿服务时长 100+ 小时。用书信陪伴乡村儿童成长，在冰冷的代码世界之外，传递人性的温暖与关怀。</p>
                       </div>
 
                       <div className="brutal-card bg-white overflow-hidden" data-category="soul" style={{display: 'none'}}>
@@ -566,7 +722,7 @@ export default function App() {
                           <p className="bold-cn">保持对未知的好奇心。持续精进英语能力（CET-6），深入探索概率论等数学基础，并自学日语，拓宽文化与技术的视野边界。</p>
                       </div>
 
-                      <div className="brutal-card span-3 bg-yellow overflow-hidden" data-category="soul" style={{display: 'none'}}>
+                      <div className="brutal-card span-2 bg-yellow overflow-hidden" data-category="soul" style={{display: 'none'}}>
                           <div className="card-watermark">🎨</div>
                           <div className="card-header">
                               <div className="card-tag bg-black text-white">Multi-dimensional Hobbies</div>
