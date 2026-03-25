@@ -1,0 +1,327 @@
+/* 引入极具力量感的硬核英文字体，中文使用系统自带粗黑体 */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700&display=swap');
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    background-color: #f4f4f0; /* 带点灰度的复古白纸色 */
+    color: #111; 
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 粗野主义波点背景 */
+.brutal-bg-dots {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background-image: radial-gradient(#111 2px, transparent 2px);
+    background-size: 30px 30px;
+    opacity: 0.1;
+}
+
+#canvas-container { position: absolute; inset: 0; z-index: 1; }
+.ui-container { position: absolute; inset: 0; z-index: 10; display: flex; text-align: center; }
+
+/* === 颜色与排版基础工具类 === */
+.bg-yellow { background-color: #FFDE00; }
+.bg-black { background-color: #111; }
+.bg-white { background-color: #fff; }
+.text-yellow { color: #FFDE00; }
+.text-black { color: #111; }
+.text-white { color: #fff; }
+
+.brutal-font { font-family: 'Chakra Petch', sans-serif; text-transform: uppercase; font-weight: 700; }
+.bold-cn { font-weight: 700; letter-spacing: 0.5px; }
+.px-2 { padding: 0 10px; }
+.mt-auto { margin-top: auto; }
+
+/* === 粗野主义基础盒子样式 === */
+.brutal-box {
+    border: 4px solid #111;
+    box-shadow: 8px 8px 0px #111;
+}
+
+/* === Level 1: 首页 === */
+.level1 { flex-direction: column; justify-content: center; align-items: center; padding: 20px; pointer-events: none;}
+
+.slogan { font-size: 6rem; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; opacity: 0;}
+.tags { font-size: 1.5rem; margin-bottom: 30px; opacity: 0; background: #111; color: #fff; padding: 5px 15px; display: inline-block; transform: rotate(-2deg); }
+
+.micro-intro { padding: 20px; text-align: left; margin-bottom: 40px; opacity: 0; max-width: 500px; transform: rotate(1deg); }
+.micro-intro p { margin: 10px 0; font-size: 1.1rem; border-bottom: 2px dashed #ccc; padding-bottom: 5px;}
+.micro-intro p:last-child { border-bottom: none; }
+
+.action-buttons-group { pointer-events: auto; display: flex; gap: 20px; opacity: 0; }
+
+/* === 机械感按钮 === */
+.brutal-btn {
+    border: 4px solid #111;
+    box-shadow: 6px 6px 0px #111;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+/* 核心互动：点击按压动画 */
+.brutal-btn:active {
+    transform: translate(6px, 6px);
+    box-shadow: 0px 0px 0px #111;
+}
+
+/* === Level 2: 全景漫游 === */
+.level2 { z-index: 5; opacity: 0; pointer-events: none; flex-direction: row; background-color: #f4f4f0; }
+
+.side-nav {
+    width: 260px; padding: 40px 20px; display: flex; flex-direction: column; gap: 15px;
+    margin: 20px; box-shadow: 10px 10px 0px #111;
+}
+.nav-header { font-size: 1.5rem; border-bottom: 4px solid #111; padding-bottom: 10px; margin-bottom: 10px; }
+
+.filter-btn {
+    background: transparent; border: 4px solid transparent; color: #111;
+    font-weight: 900; cursor: pointer; text-align: left; padding: 10px 15px; font-size: 1.1rem;
+    transition: all 0.2s;
+}
+.filter-btn:hover { border: 4px solid #111; transform: translateX(5px); }
+.filter-btn.active { background: #FFDE00; border: 4px solid #111; box-shadow: 4px 4px 0px #111; }
+
+#easter-egg-lock-side {
+    padding: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+#easter-egg-lock-side:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px #111; }
+
+.multiverse-viewport { flex: 1; padding: 20px 40px; overflow-y: auto; }
+
+/* === Bento Box 便当盒网格布局 === */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-auto-rows: minmax(200px, auto);
+    gap: 30px;
+    grid-auto-flow: dense; /* 允许小卡片填补大卡片留下的空隙 */
+    max-width: 1400px;
+    padding-bottom: 50px;
+}
+
+/* 机械感交互卡片 */
+.brutal-card {
+    border: 4px solid #111;
+    box-shadow: 10px 10px 0px #111;
+    padding: 30px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; flex-direction: column;
+}
+
+/* 核心互动：卡片点击/按压时的真实物理反馈 */
+.brutal-card:active {
+    transform: translate(10px, 10px);
+    box-shadow: 0px 0px 0px #111;
+}
+
+/* 打破死板：尺寸变异类名 */
+.span-2 { grid-column: span 2; }
+.row-span-2 { grid-row: span 2; }
+
+.card-tag {
+    align-self: flex-start; padding: 5px 12px; font-weight: 900;
+    border: 2px solid #111; margin-bottom: 20px; font-size: 0.9rem;
+}
+
+/* === 卡片小图标/头像 === */
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border: 3px solid #111;
+    object-fit: cover;
+    margin-bottom: 15px;
+    background: #f4f4f0;
+}
+
+.card-icon.rounded {
+    border-radius: 50%;
+}
+
+/* 图标在标题旁边 */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.card-header .card-icon {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.card-header h3 {
+    margin: 0;
+}
+
+.brutal-card h3 { font-size: 1.8rem; margin: 0 0 15px 0; letter-spacing: -1px; }
+.brutal-card p { line-height: 1.6; font-size: 1.05rem; margin: 0; }
+
+/* 针对黑底卡片的特殊边框调整 */
+.brutal-card.bg-black { box-shadow: 10px 10px 0px #FFDE00; border-color: #111; }
+.brutal-card.bg-black:active { box-shadow: 0px 0px 0px #FFDE00; }
+.brutal-card.bg-black .card-tag { border-color: #FFDE00; }
+
+/* === 闪光过渡层 === */
+.flash-overlay {
+    position: fixed;
+    inset: 0;
+    background: #FFDE00;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* === 返回按钮 === */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+    transform: translateX(-20px);
+}
+.back-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+.back-btn:hover {
+    transform: translateX(5px);
+}
+
+/* === 滚动到顶按钮 === */
+.scroll-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    font-size: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.2s;
+}
+.scroll-top-btn.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+.scroll-top-btn:hover {
+    transform: translateY(-5px);
+}
+
+/* === 卡片 Hover 增强 === */
+.brutal-card {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.brutal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 15px 15px 0px #111;
+}
+.brutal-card.bg-black:hover {
+    box-shadow: 15px 15px 0px #FFDE00;
+}
+
+/* === 键盘导航高亮 === */
+.brutal-card.keyboard-focus {
+    outline: 4px solid #FFDE00;
+    outline-offset: 4px;
+}
+
+/* === 终端样式 === */
+.terminal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.terminal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.terminal-box {
+    width: 500px;
+    max-width: 90%;
+    padding: 30px;
+    box-shadow: 0 0 50px rgba(255, 222, 0, 0.3);
+}
+.terminal-header {
+    color: #FFDE00;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #FFDE00;
+    padding-bottom: 10px;
+    font-size: 1.2rem;
+}
+.terminal-content {
+    font-family: 'Courier New', monospace;
+    color: #00ff00;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.terminal-prompt {
+    color: #FFDE00;
+    margin-right: 8px;
+}
+.terminal-input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: inherit;
+    min-width: 200px;
+    caret-color: transparent;
+}
+.terminal-input:focus {
+    outline: none;
+}
+.terminal-cursor {
+    color: #00ff00;
+    animation: cursor-blink 1s infinite;
+}
+@keyframes cursor-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+.terminal-hint {
+    color: #666;
+    font-size: 0.85rem;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+/* === 粒子效果 === */
+.particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 2000;
+}
+
+@media (max-width: 1000px) {
+    .slogan { font-size: 4rem; }
+    .span-2 { grid-column: span 1; }
+    .row-span-2 { grid-row: span 1; }
+    .level2 { flex-direction: column; }
+    .side-nav { width: auto; margin: 10px; }
+    .back-btn { top: 10px; left: 10px; font-size: 1rem; padding: 10px 20px; }
+    .scroll-top-btn { bottom: 20px; right: 20px; width: 40px; height: 40px; }
+}

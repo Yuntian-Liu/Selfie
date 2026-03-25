@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    background-color: #f4f4f0; 
+    color: #111; 
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+/* 噪点纹理增加质感 */
+.noise-overlay {
+    position: fixed; inset: 0; z-index: 3; pointer-events: none;
+    background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+}
+
+.brutal-bg-dots {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    background-image: radial-gradient(#111 2px, transparent 2px);
+    background-size: 30px 30px;
+    opacity: 0.08;
+}
+
+#canvas-container { position: absolute; inset: 0; z-index: 1; }
+.ui-container { position: absolute; inset: 0; z-index: 10; display: flex; text-align: center; }
+
+/* 颜色工具类 (新增电光蓝) */
+.bg-yellow { background-color: #FFDE00; }
+.bg-black { background-color: #111; }
+.bg-white { background-color: #fff; }
+.bg-blue { background-color: #4D4DFF; } /* 新增辅助色 */
+.text-yellow { color: #FFDE00; }
+.text-black { color: #111; }
+.text-white { color: #fff; }
+.text-blue { color: #4D4DFF; }
+
+.brutal-font { font-family: 'Chakra Petch', sans-serif; text-transform: uppercase; font-weight: 700; }
+.bold-cn { font-weight: 700; letter-spacing: 0.5px; }
+.px-2 { padding: 0 10px; }
+.mt-4 { margin-top: 15px; }
+
+.brutal-box { border: 4px solid #111; box-shadow: 8px 8px 0px #111; }
+
+/* === Level 1: 首页 === */
+.level1 { flex-direction: column; justify-content: center; align-items: center; padding: 20px; pointer-events: none;}
+.slogan { font-size: 5.5rem; line-height: 1.1; letter-spacing: -2px; margin-bottom: 20px; opacity: 0;}
+.tags { font-size: 1.2rem; margin-bottom: 30px; opacity: 0; background: #111; color: #fff; padding: 5px 15px; display: inline-block; transform: rotate(-2deg); }
+
+/* 首屏图文排版 */
+.hero-layout { display: flex; gap: 30px; margin-bottom: 40px; opacity: 0; align-items: stretch; justify-content: center; flex-wrap: wrap;}
+.micro-intro { padding: 20px; text-align: left; max-width: 450px; transform: rotate(1deg); }
+.micro-intro p { margin: 10px 0; font-size: 1.1rem; border-bottom: 2px dashed #ccc; padding-bottom: 5px;}
+.micro-intro p:last-child { border-bottom: none; }
+.hero-image-box { width: 220px; transform: rotate(-3deg); padding: 10px; }
+
+.action-buttons-group { pointer-events: auto; display: flex; gap: 20px; opacity: 0; z-index: 10;}
+
+/* 跑马灯设计 */
+.marquee-container {
+    position: absolute; bottom: 40px; width: 105%; left: -2.5%;
+    padding: 10px 0; transform: rotate(-2deg); pointer-events: none;
+}
+.marquee-content {
+    white-space: nowrap; font-size: 1.5rem; letter-spacing: 2px;
+    animation: marquee 20s linear infinite; display: inline-block;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* 按钮 */
+.brutal-btn {
+    border: 4px solid #111; box-shadow: 6px 6px 0px #111;
+    padding: 15px 30px; font-size: 1.2rem; font-weight: 900;
+    cursor: pointer; transition: transform 0.1s, box-shadow 0.1s;
+}
+.brutal-btn:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px #111; }
+
+/* === Level 2: 全景漫游 === */
+.level2 { z-index: 5; opacity: 0; pointer-events: none; flex-direction: row; background-color: #f4f4f0; }
+.side-nav { width: 260px; padding: 40px 20px; display: flex; flex-direction: column; gap: 15px; margin: 20px; box-shadow: 10px 10px 0px #111; }
+.nav-header { font-size: 1.5rem; border-bottom: 4px solid #111; padding-bottom: 10px; margin-bottom: 10px; }
+.filter-btn { background: transparent; border: 4px solid transparent; color: #111; font-weight: 900; cursor: pointer; text-align: left; padding: 10px 15px; font-size: 1.1rem; transition: all 0.2s; }
+.filter-btn:hover { border: 4px solid #111; transform: translateX(5px); }
+.filter-btn.active { background: #FFDE00; border: 4px solid #111; box-shadow: 4px 4px 0px #111; }
+
+.multiverse-viewport { flex: 1; padding: 20px 40px; overflow-y: auto; }
+
+/* === 核心优化：结构化 Bento Grid === */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 强制3列，告别混乱 */
+    grid-auto-rows: minmax(220px, auto);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+.brutal-card {
+    border: 4px solid #111; box-shadow: 10px 10px 0px #111;
+    padding: 30px; position: relative; cursor: pointer;
+    display: flex; flex-direction: column;
+    transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.brutal-card:hover { transform: translate(-4px, -4px); box-shadow: 14px 14px 0px #111; }
+.brutal-card:active { transform: translate(10px, 10px); box-shadow: 0px 0px 0px #111; transition: 0.05s; }
+
+.span-2 { grid-column: span 2; }
+.row-span-2 { grid-row: span 2; }
+
+/* === 核心优化：图片处理 (黑白+正片叠底) === */
+.brutal-img-container {
+    border: 4px solid #111;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+    /* 容器背景色决定了图片的底色 */
+}
+.brutal-img {
+    width: 100%; height: 200px; object-fit: cover; display: block;
+    filter: grayscale(100%) contrast(120%); /* 默认黑白且高对比度 */
+    mix-blend-mode: multiply; /* 正片叠底，透出容器背景色 */
+    transition: all 0.4s ease;
+}
+.hero-image-box .brutal-img { height: 100%; }
+
+/* 鼠标悬浮时恢复彩色 */
+.brutal-card:hover .brutal-img, 
+.hero-image-box:hover .brutal-img {
+    filter: grayscale(0%) contrast(100%);
+    mix-blend-mode: normal;
+    transform: scale(1.05);
+}
+
+.card-tag { align-self: flex-start; padding: 5px 12px; font-weight: 900; border: 2px solid #111; margin-bottom: 20px; font-size: 0.9rem; }
+.brutal-card h3 { font-size: 1.8rem; margin: 0 0 15px 0; letter-spacing: -1px; }
+.brutal-card p { line-height: 1.6; font-size: 1.05rem; margin: 0; }
+
+/* 黑底/蓝底卡片适配 */
+.brutal-card.bg-black { box-shadow: 10px 10px 0px #FFDE00; border-color: #111; }
+.brutal-card.bg-black:hover { box-shadow: 14px 14px 0px #FFDE00; }
+.brutal-card.bg-black:active { box-shadow: 0px 0px 0px #FFDE00; }
+.brutal-card.bg-blue { box-shadow: 10px 10px 0px #111; border-color: #111; }
+
+/* === 顺滑的黑幕过渡层 === */
+.transition-overlay {
+    position: fixed; inset: 0; background: #111; z-index: 999;
+    transform: translateY(100%); pointer-events: none;
+}
+
+/* 按钮 */
+.back-btn { position: fixed; top: 20px; left: 20px; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.2s; transform: translateX(-20px); }
+.back-btn.visible { opacity: 1; pointer-events: auto; transform: translateX(0); }
+.scroll-top-btn { position: fixed; bottom: 30px; right: 30px; z-index: 100; width: 50px; height: 50px; padding: 0; font-size: 1.5rem; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+
+/* 响应式 */
+@media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .slogan { font-size: 4rem; }
+}
+@media (max-width: 768px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 1; }
+    .row-span-2 { grid-row: span 1; }
+    .level2 { flex-direction: column; }
+    .side-nav { width: auto; margin: 10px; }
+    .hero-layout { flex-direction: column; align-items: center; }
+}

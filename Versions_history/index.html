@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碳碳四键 | 极客领域</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="brutal-bg-dots"></div>
+
+    <div id="canvas-container"></div>
+
+    <!-- 闪光过渡层 -->
+    <div id="flash-overlay" class="flash-overlay"></div>
+
+    <!-- Level 2 返回按钮 -->
+    <button id="back-btn" class="back-btn brutal-btn bg-white">← 返回首屏</button>
+
+    <!-- 滚动到顶按钮 -->
+    <button id="scroll-top-btn" class="scroll-top-btn brutal-btn bg-yellow">↑</button>
+
+    <!-- 终端彩蛋覆盖层 -->
+    <div id="terminal-overlay" class="terminal-overlay">
+        <div class="terminal-box brutal-box bg-black">
+            <div class="terminal-header brutal-font">[ SYSTEM ACCESS ]</div>
+            <div class="terminal-content">
+                <span class="terminal-prompt">root@carbon4:~$</span>
+                <span id="terminal-input" class="terminal-input" contenteditable="true"></span>
+                <span class="terminal-cursor">█</span>
+            </div>
+            <div class="terminal-hint">按 Enter 确认 · Esc 关闭</div>
+        </div>
+    </div>
+
+    <div id="level1-layer" class="ui-container level1">
+        <h1 class="slogan brutal-font">
+            [ DECODING <span class="bg-yellow text-black px-2">THE NOVEL</span> ]
+        </h1>
+        <p class="tags bold-cn">测控技术 / 全栈开发 / AI 探索者</p>
+
+        <div class="micro-intro bold-cn brutal-box bg-white">
+            <p>🔥 注重细节且靠谱的极客</p>
+            <p>⚡ 热衷于从零到一开发新奇事物</p>
+            <p>💻 在 Y9000P 算力中枢上部署 AI 与全栈应用</p>
+        </div>
+
+        <div class="action-buttons-group">
+            <button class="brutal-btn bg-white">社交链接</button>
+            <button id="explore-btn" class="brutal-btn bg-yellow">展开全景宇宙 ↗</button>
+        </div>
+    </div>
+
+    <div id="level2-container" class="ui-container level2">
+        
+        <aside class="side-nav brutal-box bg-white">
+            <div class="nav-header brutal-font">SYS.MENU</div>
+            <button class="filter-btn active" data-filter="all"># 核心全景</button>
+            <button class="filter-btn" data-filter="code"># 创造与代码</button>
+            <button class="filter-btn" data-filter="path"># 专业足迹</button>
+            <button class="filter-btn" data-filter="soul"># 灵魂与温度</button>
+            <div id="easter-egg-lock-side" class="brutal-box bg-black text-yellow mt-auto">
+                <span class="lock-icon">🔒</span>
+                <span class="lock-text">异常扇区</span>
+            </div>
+        </aside>
+
+        <main class="multiverse-viewport">
+            
+            <div class="bento-grid">
+                
+                <div class="brutal-card span-2 bg-yellow" data-category="code">
+                    <div class="card-tag bg-black text-white">AI for Science</div>
+                    <h3 class="brutal-font">固态电池逆合成系统</h3>
+                    <p class="bold-cn">结合北化测控专业的严谨数理逻辑，利用前沿 AI 算法深入化学与材料学底层进行新设计探索。</p>
+                </div>
+
+                <div class="brutal-card bg-white" data-category="code">
+                    <div class="card-tag bg-black text-white">Full Stack</div>
+                    <h3 class="brutal-font">Gradify</h3>
+                    <p class="bold-cn">FastAPI + JS 构建。为英语老师量身打造的作业智能反馈平台。</p>
+                </div>
+
+                <div class="brutal-card row-span-2 bg-black text-white" data-category="soul">
+                    <div class="card-tag bg-yellow text-black">ISFJ Core</div>
+                    <h3 class="brutal-font text-yellow">靠谱内核</h3>
+                    <p class="bold-cn">担任「蓝信封」通信大使。注重细节与同理心，这些特质不仅让我的代码极少出 Bug，更让我保持与真实世界的温度连接。</p>
+                </div>
+
+                <div class="brutal-card bg-white" data-category="path">
+                    <div class="card-tag bg-black text-white">Experience</div>
+                    <h3 class="brutal-font">实战与观察</h3>
+                    <p class="bold-cn">英语机构实习历练，校园招聘会实地调研。用脚步丈量行业前沿。</p>
+                </div>
+
+                <div class="brutal-card bg-yellow" data-category="soul">
+                    <div class="card-tag bg-black text-white">Lifelong Learning</div>
+                    <h3 class="brutal-font">多维雷达</h3>
+                    <p class="bold-cn">CET4 636分 / CET6 570分。死磕概率论与数理统计，并坚持日语打卡。</p>
+                </div>
+
+                <div class="brutal-card span-2 bg-white" data-category="code">
+                    <div class="card-tag bg-black text-white">Hardware</div>
+                    <h3 class="brutal-font">Y9000P 战车</h3>
+                    <p class="bold-cn">搭载 5070Ti 显卡。支撑我跑通 ResNet 肺部 CT 图像分类模型的顶级算力中枢。</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
