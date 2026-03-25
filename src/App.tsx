@@ -1,5 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { 
+  MessageCircle, 
+  MessageSquare, 
+  Github, 
+  Mail, 
+  Tv, 
+  BookOpen, 
+  Music, 
+  Gamepad2, 
+  Globe,
+  PenTool
+} from 'lucide-react';
 
 interface Project {
   id: string;
@@ -11,6 +23,7 @@ interface Project {
   layoutClass: string;
   tagClass: string;
   images: string[];
+  coverImages?: string[];
   shortDesc: string;
   details: string[];
   githubUrl?: string;
@@ -28,6 +41,7 @@ const techProjects: Project[] = [
     layoutClass: 'span-2 bg-yellow',
     tagClass: 'bg-black text-white',
     images: ['/images/SolidState_Agent_1.jpg', '/images/SolidState_Agent_2.jpg', '/images/SolidState_Agent_3.png'],
+    coverImages: ['/images/SolidState_Agent_3.png', '/images/SolidState_Agent_1.jpg', '/images/SolidState_Agent_2.jpg'],
     shortDesc: '基于高通量逆合成分析模型，结合经LoRA微调的LLM与蒙特卡洛树搜索（MCTS），实现改性聚氨酯弹性自愈电池材料的高通量筛选与发现，突破黑盒限制提供化学直觉解释。',
     details: [
       '构建基于大语言模型 (LLM) 的高通量分子逆合成分析系统，针对固态电池材料研发痛点提供AI解决方案。',
@@ -47,6 +61,7 @@ const techProjects: Project[] = [
     layoutClass: 'bg-white',
     tagClass: 'bg-black text-white',
     images: ['/images/AI_Medical_1.jpg', '/images/AI_Medical_2.jpg'],
+    coverImages: ['/images/AI_Medical_2.jpg', '/images/AI_Medical_1.jpg'],
     shortDesc: '基于PyTorch构建多模态分类系统，引入Focal Loss与强数据增强，实现肺癌CT等10类病变高精度识别，Top-3准确率达95.24%。',
     details: [
       '独立完成基于 PyTorch 的极小样本医学图像分类系统开发。',
@@ -65,6 +80,7 @@ const techProjects: Project[] = [
     layoutClass: 'bg-white',
     tagClass: 'bg-black text-white',
     images: ['/images/Gradify_1.png', '/images/Gradify_2.png', '/images/Gradify_3.png'],
+    coverImages: ['/images/Gradify_3.png', '/images/Gradify_1.png', '/images/Gradify_2.png'],
     shortDesc: 'FastAPI+JS构建，独创“三明治式”Prompt架构，结合Few-shot约束LLM生成解析，采用SSE流式输出，批改效率提升7.5倍。',
     details: [
       '独立负责前后端全栈开发，后端采用 FastAPI 提供高性能接口，前端采用原生 JS + Tailwind CSS 构建响应式界面。',
@@ -84,6 +100,7 @@ const techProjects: Project[] = [
     layoutClass: 'span-2 bg-blue text-white',
     tagClass: 'bg-black text-white',
     images: ['/images/MyScore_1.png', '/images/MyScore_2.png', '/images/MyScore_3.png'],
+    coverImages: ['/images/MyScore_3.png', '/images/MyScore_1.png', '/images/MyScore_2.png'],
     shortDesc: '原生JS+Tailwind构建高性能SPA。依托Supabase实现Serverless架构与行级安全（RLS），集成DeepSeek大模型提供智能学习反馈，支持Canvas高保真成绩单导出。',
     details: [
       '独立设计并开发高性能单页应用 (SPA)，采用原生 JS 与 Tailwind CSS，追求极致的加载速度与流畅体验。',
@@ -109,7 +126,7 @@ const worldProjects: Project[] = [
     isFlagship: false,
     layoutClass: 'span-2 bg-yellow',
     tagClass: 'bg-black text-white',
-    images: ['/images/Work_1.jpg', '/images/Work_2.jpg', '/images/Work_3.jpg', '/images/Work_4.jpg'],
+    images: ['/images/Work_3.jpg', '/images/Work_4.jpg', '/images/Work_2.jpg', '/images/Work_1.jpg'],
     shortDesc: '入职时间：2025.09。负责英语作业批改与辅导。在实践中发现痛点，并独立开发 Gradify 自动化批改系统，服务百余名学员，有效释放教学人力，实现技术赋能教育。',
     details: [
       '入职时间：2025.09',
@@ -120,19 +137,120 @@ const worldProjects: Project[] = [
   }
 ];
 
+type TimelineEventType = 'success' | 'failure' | 'milestone' | 'neutral';
+
+interface TimelineItem {
+  date: string;
+  events: {
+    text: string;
+    type: TimelineEventType;
+  }[];
+}
+
+const pastTimeline: TimelineItem[] = [
+  { date: '2024.06', events: [{ text: '第一志愿录取至北京化工大学、第六志愿专业录取至自动化类（高端装备与智能制造）', type: 'success' }] },
+  { date: '2024.08', events: [{ text: '新生代表发言竞选 落选', type: 'failure' }] },
+  { date: '2024.09', events: [{ text: '担任机自A2420班临时负责人', type: 'milestone' }, { text: '班长、学习委员竞选 落选', type: 'failure' }] },
+  { date: '2024.10', events: [{ text: '入党积极分子竞选 落选', type: 'failure' }, { text: '学生会面试：学术科技部、团委办公室均通过一面（20/110）进入二面，二面均落选', type: 'failure' }] },
+  { date: '2024.11', events: [{ text: '北京化工大学智能小车竞速赛 优秀奖', type: 'success' }] },
+  { date: '2025.01', events: [{ text: '大一上期末GPA：A-', type: 'success' }] },
+  { date: '2025.03', events: [{ text: '入党积极分子竞选 落选', type: 'failure' }] },
+  { date: '2025.06', events: [{ text: 'CET-4考试：笔试636分，听力203，阅读249，写译184；口试：优秀', type: 'success' }] },
+  { date: '2025.07', events: [{ text: '大一下期末GPA：B-', type: 'neutral' }, { text: '专业分流—进入测控技术与仪器专业—测控2402', type: 'milestone' }] },
+  { date: '2025.08', events: [{ text: '厚海教育面试', type: 'neutral' }] },
+  { date: '2025.09', events: [{ text: '厚海教育入职—实习—助教老师', type: 'success' }] },
+  { date: '2025.10', events: [{ text: '入党积极分子竞选 票数第一当选', type: 'success' }] },
+  { date: '2025.11', events: [{ text: '人工智能+竞赛 无奖', type: 'failure' }] },
+  { date: '2025.12', events: [{ text: '入党积极分子考试 一次通过', type: 'success' }, { text: 'CET-6考试：笔试530分，听力188，阅读215，写译127；口试：良好', type: 'success' }] },
+  { date: '2026.01', events: [{ text: '基于LLM的固态电池高通量分子逆合成模型 项目启动', type: 'milestone' }, { text: '大二上期末GPA：B', type: 'neutral' }, { text: 'MyScore 全栈开发 项目启动', type: 'milestone' }] },
+  { date: '2026.03', events: [{ text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
+];
+
+const futureTimeline: TimelineItem[] = [
+  { date: '2026.03.17', events: [{ text: '参加米哈游北京城市宣讲会', type: 'neutral' }] },
+  { date: '2026.03.19', events: [{ text: '投递米哈游实习', type: 'neutral' }] },
+  { date: '2026.03.20', events: [{ text: '米哈游AI产品岗终止', type: 'failure' }] },
+  { date: '2026.03.21', events: [{ text: '投递小米实习', type: 'neutral' }] },
+  { date: '2026.03.23', events: [{ text: '投递字节跳动实习', type: 'neutral' }] },
+  { date: '2026.03.25', events: [{ text: '米哈游AI Agent开发岗 初筛通过', type: 'success' }] },
+];
+
 export default function App() {
   const [currentFilter, setCurrentFilter] = useState('all');
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeImgIdx, setActiveImgIdx] = useState(0);
+  const [activeTimelineTab, setActiveTimelineTab] = useState<'past' | 'future'>('past');
+  
+  // Social Unlock State
+  const [isSocialUnlocked, setIsSocialUnlocked] = useState(false);
+  const [socialPasswordInput, setSocialPasswordInput] = useState('');
+  const [socialError, setSocialError] = useState('');
+
+  // Resume Modal State
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const [resumeAuthMode, setResumeAuthMode] = useState<'quiz' | 'fa'>('quiz');
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [faPasswordInput, setFaPasswordInput] = useState('');
+  const [resumeError, setResumeError] = useState('');
+  const [isResumeReady, setIsResumeReady] = useState(false);
+  const [isHobbiesModalOpen, setIsHobbiesModalOpen] = useState(false);
+
   const viewportRef = useRef<HTMLDivElement>(null);
+
+  const QUIZ_OPTIONS = ['小米', '米哈游', '鹰角网络', '哔哩哔哩', '腾讯', '美团', '字节跳动', '京东', '厚海教育', '华为', '网易游戏'];
+  const CORRECT_OPTIONS = ['小米', '米哈游', '字节跳动', '厚海教育'];
+
+  const handleSocialUnlock = () => {
+    if (socialPasswordInput === 'Ti2O3CX86_210121') {
+      setIsSocialUnlocked(true);
+      setSocialError('');
+    } else {
+      setSocialError('密钥错误，访问拒绝。');
+    }
+  };
+
+  const toggleCompanySelection = (company: string) => {
+    setSelectedCompanies(prev => 
+      prev.includes(company) ? prev.filter(c => c !== company) : [...prev, company]
+    );
+    setResumeError(''); // Clear error on change
+  };
+
+  const triggerDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/resume.pdf';
+    link.download = '刘云天_简历.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleResumeQuizSubmit = () => {
+    if (selectedCompanies.length === CORRECT_OPTIONS.length && CORRECT_OPTIONS.every(c => selectedCompanies.includes(c))) {
+      setIsResumeReady(true);
+      setResumeError('');
+    } else {
+      setResumeError('验证失败：选项不正确，请重新选择。');
+    }
+  };
+
+  const handleResumeFASubmit = () => {
+    if (faPasswordInput === 'liuyunt_buct2024') {
+      setIsResumeReady(true);
+      setResumeError('');
+    } else {
+      setResumeError('FA密钥错误，访问拒绝。');
+    }
+  };
 
   const filterNames: Record<string, string> = {
       all: '核心全景',
       unique: '独一无二',
       tech: '奇思妙想',
       world: '大千世界',
-      soul: '灵魂与温度'
+      soul: '灵魂与温度',
+      timeline: '回首与向前'
   };
 
   useEffect(() => {
@@ -234,7 +352,7 @@ export default function App() {
                 scale: 1, opacity: 1, y: 0,
                 duration: 0.4, delay: delay,
                 ease: "power3.out",
-                onStart: () => { card.style.display = 'flex'; }
+                onStart: () => { card.style.display = card.classList.contains('timeline-container') ? 'block' : 'flex'; }
             });
             delay += 0.05;
         } else {
@@ -312,7 +430,7 @@ export default function App() {
           </div>
 
           <div className="action-buttons-group">
-              <a href="/resume.pdf" download="刘云天_简历.pdf" className="brutal-btn bg-white inline-block text-center no-underline text-black">简历下载</a>
+              <button onClick={() => setIsResumeModalOpen(true)} className="brutal-btn bg-white inline-block text-center no-underline text-black">简历下载</button>
               <button className="brutal-btn bg-yellow" onClick={transitionToLevel2}>展开全景宇宙 ↗</button>
           </div>
 
@@ -357,6 +475,7 @@ export default function App() {
                   <button className={`filter-btn ${currentFilter === 'tech' ? 'active' : ''}`} onClick={() => applyFilter('tech')}># 奇思妙想</button>
                   <button className={`filter-btn ${currentFilter === 'world' ? 'active' : ''}`} onClick={() => applyFilter('world')}># 大千世界</button>
                   <button className={`filter-btn ${currentFilter === 'soul' ? 'active' : ''}`} onClick={() => applyFilter('soul')}># 灵魂与温度</button>
+                  <button className={`filter-btn ${currentFilter === 'timeline' ? 'active' : ''}`} onClick={() => applyFilter('timeline')}># 回首与向前</button>
               </aside>
 
               <main className="multiverse-viewport" ref={viewportRef} onScroll={handleScroll}>
@@ -416,6 +535,18 @@ export default function App() {
                           <div className="mt-4 text-sm font-bold text-yellow underline cursor-pointer">感受人文与热爱 ↗</div>
                       </div>
 
+                      {/* 回首与向前 Summary */}
+                      <div className="brutal-card span-full bg-[#fef08a] overflow-hidden" data-category="all" onClick={() => applyFilter('timeline')} style={{ gridColumn: '1 / -1' }}>
+                          <div className="card-watermark">⏳</div>
+                          <div className="card-header">
+                              <div className="card-tag bg-black text-white">05 / 回首与向前</div>
+                              <div className="card-icon">⏳</div>
+                          </div>
+                          <h3 className="brutal-font">时间线与足迹</h3>
+                          <p className="bold-cn">过去与未来的交汇点。<br/>记录大学以来的重要时刻，以及近期的前行足迹与展望。</p>
+                          <div className="mt-4 text-sm font-bold underline cursor-pointer">查看完整时间线 ↗</div>
+                      </div>
+
                       {/* ==================== 独一无二 (unique) ==================== */}
                       
                       <div className="brutal-card bg-white" data-category="unique" style={{display: 'none'}}>
@@ -466,7 +597,71 @@ export default function App() {
                               <div className="card-icon">🧩</div>
                           </div>
                           <h3 className="brutal-font">MBTI: ISFJ</h3>
-                          <p className="bold-cn">守卫者人格。拥有靠谱的内核，注重细节，责任心强。在团队协作中是稳定输出的基石，在代码世界里是严谨的架构者。</p>
+                          <p className="bold-cn">守卫者人格。喜欢有规划、有计划地完成任务。非常细腻，能够敏锐地感知到他人情绪。善于主动学习，自主性强。有点小社恐，但是熟悉了就会很自然！</p>
+                      </div>
+
+                      <div className="brutal-card span-2 bg-black text-white" data-category="unique" style={{display: 'none'}}>
+                          <div className="card-header">
+                              <div className="card-tag bg-yellow text-black">Contact</div>
+                              <div className="card-icon">🔗</div>
+                          </div>
+                          <h3 className="brutal-font text-yellow">社交网络与联系方式</h3>
+                          
+                          {!isSocialUnlocked ? (
+                              <div className="mt-6 p-6 border-4 border-white bg-black">
+                                  <p className="bold-cn mb-4 text-lg">⚠️ 访问受限：请输入社交密钥以解锁联系方式。</p>
+                                  <div className="flex flex-col sm:flex-row gap-4">
+                                      <input 
+                                          type="password" 
+                                          value={socialPasswordInput} 
+                                          onChange={(e) => setSocialPasswordInput(e.target.value)} 
+                                          className="flex-1 bg-white text-black px-4 py-3 outline-none border-4 border-white focus:border-yellow font-bold text-lg" 
+                                          placeholder="Enter Key..." 
+                                      />
+                                      <button onClick={handleSocialUnlock} className="brutal-btn bg-yellow text-black px-8 py-3 text-lg hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all">
+                                          UNLOCK
+                                      </button>
+                                  </div>
+                                  {socialError && <p className="text-red-500 mt-4 text-base font-bold bg-red-100/10 inline-block px-3 py-1 border-l-4 border-red-500">{socialError}</p>}
+                              </div>
+                          ) : (
+                              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 bold-cn">
+                                  <div className="border-4 border-white p-4 bg-white text-black">
+                                      <h4 className="font-black text-lg mb-3 border-b-4 border-black pb-1 uppercase">核心联系</h4>
+                                      <ul className="space-y-2 font-bold">
+                                          <li className="flex justify-between items-center border-b-2 border-dashed border-gray-300 pb-1"><span className="flex items-center gap-2"><MessageCircle size={18} /> QQ:</span> <span>1589099855</span></li>
+                                          <li className="flex justify-between items-center border-b-2 border-dashed border-gray-300 pb-1"><span className="flex items-center gap-2"><MessageCircle size={18} /> 微信:</span> <span>Ti2O3CX86</span></li>
+                                          <li className="flex justify-between items-center border-b-2 border-dashed border-gray-300 pb-1"><span className="flex items-center gap-2"><MessageSquare size={18} /> 飞书:</span> <span>18048610069</span></li>
+                                          <li className="flex justify-between items-center border-b-2 border-dashed border-gray-300 pb-1"><span className="flex items-center gap-2"><Mail size={18} /> 工作邮箱:</span> <span>liuyuntian@ytunx.com</span></li>
+                                          <li className="flex justify-between items-center pb-1"><span className="flex items-center gap-2"><Mail size={18} /> 日常邮箱:</span> <span>tian_lktjb2024@163.com</span></li>
+                                      </ul>
+                                  </div>
+                                  <div className="flex flex-col gap-6">
+                                      <div className="border-4 border-white p-4">
+                                          <h4 className="font-black text-lg mb-3 border-b-4 border-white pb-1 text-yellow uppercase">技术与主页</h4>
+                                          <ul className="space-y-2 font-bold">
+                                              <li className="flex justify-between items-center pb-1"><span className="flex items-center gap-2"><Github size={18} /> GitHub:</span> <a href="https://github.com/Yuntian-Liu" target="_blank" rel="noreferrer" className="underline hover:text-yellow">Yuntian-Liu</a></li>
+                                          </ul>
+                                      </div>
+                                      <div className="border-4 border-white p-4">
+                                          <h4 className="font-black text-lg mb-3 border-b-4 border-white pb-1 text-yellow uppercase">自媒体与生活</h4>
+                                          <ul className="space-y-2 font-bold">
+                                              <li className="flex justify-between items-center border-b-2 border-dashed border-gray-600 pb-1"><span className="flex items-center gap-2"><Tv size={18} /> BiliBili:</span> <span>碳碳四键_</span></li>
+                                              <li className="flex justify-between items-center border-b-2 border-dashed border-gray-600 pb-1"><span className="flex items-center gap-2"><BookOpen size={18} /> 小红书:</span> <span>Ti2O3CX86</span></li>
+                                              <li className="flex justify-between items-center pb-1"><span className="flex items-center gap-2"><Music size={18} /> 抖音:</span> <span>Ti2O3CX86</span></li>
+                                          </ul>
+                                      </div>
+                                      <div className="border-4 border-white p-4">
+                                          <h4 className="font-black text-lg mb-3 border-b-4 border-white pb-1 text-yellow uppercase">游戏与学习</h4>
+                                          <ul className="space-y-2 font-bold">
+                                              <li className="flex justify-between items-center border-b-2 border-dashed border-gray-600 pb-1"><span className="flex items-center gap-2"><Gamepad2 size={18} /> 原神:</span> <span>309845461</span></li>
+                                              <li className="flex justify-between items-center border-b-2 border-dashed border-gray-600 pb-1"><span className="flex items-center gap-2"><PenTool size={18} /> 百词斩:</span> <span>1668941582</span></li>
+                                              <li className="flex justify-between items-center pb-1"><span className="flex items-center gap-2"><Globe size={18} /> 多邻国:</span> <span>Ti2O3CX86</span></li>
+                                          </ul>
+                                      </div>
+                                  </div>
+                              </div>
+                          )}
                       </div>
 
                       {/* ==================== 奇思妙想 (tech) ==================== */}
@@ -555,7 +750,7 @@ export default function App() {
                               </div>
                               
                               <div className={`img-stack ${project.images.length === 2 ? 'dual-stack' : ''} pointer-events-none`}>
-                                  {project.images.slice(0, 3).map((img, idx) => (
+                                  {(project.coverImages || project.images).slice(0, 3).map((img, idx) => (
                                       <img key={idx} src={img} alt={`${project.title} ${idx + 1}`} className={`stack-img img-${idx + 1} brutal-filter`} />
                                   ))}
                               </div>
@@ -603,7 +798,7 @@ export default function App() {
                               </div>
                               
                               <div className={`img-stack ${project.images.length === 2 ? 'dual-stack' : ''} pointer-events-none`}>
-                                  {project.images.slice(0, 3).map((img, idx) => (
+                                  {(project.coverImages || project.images).slice(0, 3).map((img, idx) => (
                                       <img key={idx} src={img} alt={`${project.title} ${idx + 1}`} className={`stack-img img-${idx + 1} brutal-filter`} />
                                   ))}
                               </div>
@@ -722,7 +917,12 @@ export default function App() {
                           <p className="bold-cn">保持对未知的好奇心。持续精进英语能力（CET-6），深入探索概率论等数学基础，并自学日语，拓宽文化与技术的视野边界。</p>
                       </div>
 
-                      <div className="brutal-card span-2 bg-yellow overflow-hidden" data-category="soul" style={{display: 'none'}}>
+                      <div 
+                          className="brutal-card span-2 bg-yellow overflow-hidden cursor-pointer hover:-translate-y-2 transition-transform" 
+                          data-category="soul" 
+                          style={{display: 'none'}}
+                          onClick={() => setIsHobbiesModalOpen(true)}
+                      >
                           <div className="card-watermark">🎨</div>
                           <div className="card-header">
                               <div className="card-tag bg-black text-white">Multi-dimensional Hobbies</div>
@@ -730,6 +930,75 @@ export default function App() {
                           </div>
                           <h3 className="brutal-font">多维爱好</h3>
                           <p className="bold-cn">在技术之外，拥有丰富的精神世界。探索不同的生活方式，保持对生活的热爱与创造力。</p>
+                          <div className="mt-4 text-sm font-bold text-black underline">点击查看详情 ↗</div>
+                      </div>
+
+                      {/* ==================== 回首与向前 (timeline) ==================== */}
+                      
+                      <div className="brutal-card bg-white timeline-container p-4 md:p-8" data-category="timeline" style={{display: 'none', gridColumn: '1 / -1', flexDirection: 'column'}}>
+                          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b-4 md:border-b-8 border-black pb-6 gap-4 w-full">
+                              <div>
+                                  <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter brutal-font">回首与向前</h2>
+                                  <p className="text-lg font-bold mt-4 bg-black text-white inline-block px-3 py-1">
+                                  {activeTimelineTab === 'past' ? '大事件：大学以来的重要节点' : '近期时间线：最近与未来的足迹'}
+                                  </p>
+                              </div>
+                              
+                              <div className="flex border-4 border-black font-bold text-base md:text-lg bg-white">
+                                  <button 
+                                  className={`px-4 py-2 md:px-6 md:py-3 transition-colors ${activeTimelineTab === 'past' ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
+                                  onClick={() => setActiveTimelineTab('past')}
+                                  >
+                                  ⏪ 回首 (Past)
+                                  </button>
+                                  <div className="w-1 bg-black"></div>
+                                  <button 
+                                  className={`px-4 py-2 md:px-6 md:py-3 transition-colors ${activeTimelineTab === 'future' ? 'bg-black text-white' : 'hover:bg-gray-200'}`}
+                                  onClick={() => setActiveTimelineTab('future')}
+                                  >
+                                  向前 (Future) ⏩
+                                  </button>
+                              </div>
+                          </div>
+
+                          <div className="relative w-full max-w-4xl mx-auto py-10">
+                              {/* The Line */}
+                              <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1.5 bg-black md:-translate-x-1/2"></div>
+                              
+                              {(activeTimelineTab === 'past' ? pastTimeline : futureTimeline).map((item, index) => {
+                              const isEven = index % 2 === 0;
+                              return (
+                                  <div key={index} className={`relative flex flex-col md:flex-row items-start md:items-center w-full mb-12 md:mb-20 group ${isEven ? 'md:flex-row-reverse' : ''}`}>
+                                  
+                                  {/* Center Node */}
+                                  <div className="absolute left-4 md:left-1/2 w-6 h-6 bg-white border-4 border-black transform -translate-x-1/2 rotate-45 z-10 mt-1 md:mt-0 group-hover:bg-black transition-colors duration-300"></div>
+                                  
+                                  {/* Content Box */}
+                                  <div className={`w-full pl-12 md:pl-0 md:w-1/2 flex flex-col ${isEven ? 'md:items-end md:pr-12' : 'md:items-start md:pl-12'}`}>
+                                      <div className="text-2xl md:text-4xl font-black mb-4 inline-block bg-black text-white px-3 py-1 transform -skew-x-6 brutal-font">{item.date}</div>
+                                      <div className={`flex flex-col gap-4 w-full max-w-md ${isEven ? 'md:items-end' : 'md:items-start'}`}>
+                                      {item.events.map((ev, i) => {
+                                          let bgColor = 'bg-white';
+                                          let label = '';
+                                          if (ev.type === 'success') { bgColor = 'bg-[#bbf7d0]'; label = '🎯 达成 / Success'; }
+                                          else if (ev.type === 'failure') { bgColor = 'bg-[#fecaca]'; label = '💥 挫折 / Setback'; }
+                                          else if (ev.type === 'milestone') { bgColor = 'bg-[#fef08a]'; label = '🚀 启程 / Milestone'; }
+                                          else if (ev.type === 'neutral') { bgColor = 'bg-gray-100'; label = '📌 记录 / Record'; }
+
+                                          return (
+                                          <div key={i} className={`border-4 border-black p-4 w-full text-left ${bgColor} hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all`}>
+                                              <div className="text-xs font-black mb-1 opacity-70 uppercase tracking-widest">{label}</div>
+                                              <div className="font-bold text-base md:text-lg leading-snug">{ev.text}</div>
+                                          </div>
+                                          );
+                                      })}
+                                      </div>
+                                  </div>
+                                  
+                                  </div>
+                              );
+                              })}
+                          </div>
                       </div>
 
                   </div>
@@ -811,6 +1080,170 @@ export default function App() {
               )}
           </div>
       </div>
+
+      {/* Hobbies Modal */}
+      {isHobbiesModalOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto" onClick={() => setIsHobbiesModalOpen(false)}>
+              <div className="bg-white border-4 md:border-8 border-black w-full max-w-4xl relative shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)] my-4 md:my-8 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                  <button className="absolute top-4 right-4 w-10 h-10 bg-black text-white font-black text-xl hover:bg-red-500 transition-colors z-10" onClick={() => setIsHobbiesModalOpen(false)}>✕</button>
+                  
+                  <div className="p-4 md:p-8 border-b-4 md:border-b-8 border-black bg-yellow sticky top-0 z-10">
+                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter brutal-font">多维爱好</h2>
+                      <p className="font-bold text-lg mt-2">在技术之外，探索丰富的精神世界与生活方式。</p>
+                  </div>
+
+                  <div className="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                      {/* ACG及衍生IP */}
+                      <div className="border-4 border-black p-6 bg-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                          <h3 className="text-xl font-black mb-4 border-b-4 border-black pb-2 inline-block bg-black text-white px-2">📺 ACG及衍生IP</h3>
+                          <div className="flex flex-wrap gap-2 font-bold">
+                              {['Chiikawa', 'bilibili', '小林家的龙女仆', '测不准的阿波连同学', '请问您今天要来点兔子吗？', '间谍过家家', '孤独摇滚', '某科学的超电磁炮', '魔法禁书目录', '名侦探柯南', '哆啦A梦', '蜡笔小新'].map(item => (
+                                  <span key={item} className="border-2 border-black px-2 py-1 bg-gray-100">{item}</span>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* 游戏IP */}
+                      <div className="border-4 border-black p-6 bg-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                          <h3 className="text-xl font-black mb-4 border-b-4 border-black pb-2 inline-block bg-black text-white px-2">🎮 游戏IP</h3>
+                          <div className="flex flex-wrap gap-2 font-bold">
+                              {['原神·空月之歌', '星布谷地', '蓝色星原', '无限大', '初音未来·缤纷舞台'].map(item => (
+                                  <span key={item} className="border-2 border-black px-2 py-1 bg-[#bbf7d0]">{item}</span>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* 影视IP */}
+                      <div className="border-4 border-black p-6 bg-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                          <h3 className="text-xl font-black mb-4 border-b-4 border-black pb-2 inline-block bg-black text-white px-2">🎬 影视IP</h3>
+                          <div className="flex flex-wrap gap-2 font-bold">
+                              {['《碟中谍》', '《神偷奶爸》', '《侏罗纪世界》', '《疯狂动物城》', '《头脑特工队》', '《唐人街探案》'].map(item => (
+                                  <span key={item} className="border-2 border-black px-2 py-1 bg-[#fecaca]">{item}</span>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* 运动 */}
+                      <div className="border-4 border-black p-6 bg-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                          <h3 className="text-xl font-black mb-4 border-b-4 border-black pb-2 inline-block bg-black text-white px-2">🏃 运动</h3>
+                          <div className="flex flex-wrap gap-2 font-bold">
+                              {['匹克球', '乒乓球', '跳绳', '跑步'].map(item => (
+                                  <span key={item} className="border-2 border-black px-2 py-1 bg-[#bfdbfe]">{item}</span>
+                              ))}
+                          </div>
+                      </div>
+
+                      {/* 综合技能 */}
+                      <div className="border-4 border-black p-6 bg-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all md:col-span-2">
+                          <h3 className="text-xl font-black mb-4 border-b-4 border-black pb-2 inline-block bg-black text-white px-2">🛠️ 综合技能</h3>
+                          <div className="flex flex-wrap gap-2 font-bold">
+                              {['AI大模型', 'Coding', 'Agent', '英语学习', '日语学习', '教育'].map(item => (
+                                  <span key={item} className="border-2 border-black px-2 py-1 bg-yellow">{item}</span>
+                              ))}
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Resume Download Modal */}
+      {isResumeModalOpen && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setIsResumeModalOpen(false)}>
+              <div className="bg-white border-4 md:border-8 border-black w-full max-w-2xl relative shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)]" onClick={(e) => e.stopPropagation()}>
+                  <button className="absolute top-4 right-4 w-10 h-10 bg-black text-white font-black text-xl hover:bg-red-500 transition-colors" onClick={() => setIsResumeModalOpen(false)}>✕</button>
+                  
+                  <div className="p-4 md:p-8 border-b-4 md:border-b-8 border-black bg-yellow">
+                      <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter brutal-font">SECURITY CHECK</h2>
+                      <p className="font-bold text-lg mt-2">为了保护隐私安全，请完成身份验证以获取简历。</p>
+                  </div>
+
+                  <div className="p-4 md:p-8">
+                      {isResumeReady ? (
+                          <div className="flex flex-col items-center gap-6 py-8">
+                              <div className="text-6xl">✅</div>
+                              <h3 className="text-3xl font-black brutal-font">验证成功</h3>
+                              <p className="font-bold text-lg text-center">您的身份已确认，可以下载简历了。</p>
+                              <a 
+                                  href="resume.pdf" 
+                                  download="刘云天_简历.pdf" 
+                                  className="brutal-btn bg-green-400 text-black px-8 py-4 text-xl hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all inline-block text-center w-full mt-4"
+                                  onClick={() => {
+                                      setTimeout(() => {
+                                          setIsResumeModalOpen(false);
+                                          setIsResumeReady(false);
+                                          setSelectedCompanies([]);
+                                          setFaPasswordInput('');
+                                      }, 1000);
+                                  }}
+                              >
+                                  ⬇️ 点击下载简历
+                              </a>
+                          </div>
+                      ) : resumeAuthMode === 'quiz' ? (
+                          <div className="flex flex-col gap-6">
+                              <div className="bg-black text-white p-4 font-bold text-lg">
+                                  ❓ 验证问题：我投递过哪些公司的实习？（多选，需全部选对）
+                              </div>
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                  {QUIZ_OPTIONS.map((company) => (
+                                      <button 
+                                          key={company}
+                                          onClick={() => toggleCompanySelection(company)}
+                                          className={`border-4 border-black p-3 font-bold transition-all ${selectedCompanies.includes(company) ? 'bg-black text-white translate-y-1 shadow-none' : 'bg-white text-black hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'}`}
+                                      >
+                                          {company}
+                                      </button>
+                                  ))}
+                              </div>
+                              <button onClick={handleResumeQuizSubmit} className="brutal-btn bg-yellow text-black w-full py-4 text-xl mt-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                  验证并下载
+                              </button>
+                          </div>
+                      ) : (
+                          <div className="flex flex-col gap-6">
+                              <div className="bg-black text-white p-4 font-bold text-lg">
+                                  🔑 快速通行卡 (FA) 验证
+                              </div>
+                              <input 
+                                  type="password" 
+                                  value={faPasswordInput} 
+                                  onChange={(e) => setFaPasswordInput(e.target.value)} 
+                                  className="w-full bg-gray-100 text-black px-6 py-4 outline-none border-4 border-black focus:border-yellow font-bold text-xl" 
+                                  placeholder="Enter FA Key..." 
+                              />
+                              <button onClick={handleResumeFASubmit} className="brutal-btn bg-yellow text-black w-full py-4 text-xl mt-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
+                                  验证并下载
+                              </button>
+                          </div>
+                      )}
+
+                      {resumeError && <div className="mt-6 p-4 bg-red-100 border-l-8 border-red-500 font-bold text-red-700">{resumeError}</div>}
+
+                      <div className="mt-8 pt-6 border-t-4 border-dashed border-gray-300 flex justify-between items-center">
+                          {resumeAuthMode === 'quiz' ? (
+                              <div className="flex items-center gap-2">
+                                  <button onClick={() => setResumeAuthMode('fa')} className="font-bold underline hover:text-blue-600 transition-colors">
+                                      使用快速通行卡 (FA)
+                                  </button>
+                                  <div className="relative group cursor-help">
+                                      <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-black text-white font-bold text-sm">?</span>
+                                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-black text-white text-sm font-bold opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10 text-center">
+                                          请向身边的朋友或者我索要快速通行卡密钥
+                                          <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black"></div>
+                                      </div>
+                                  </div>
+                              </div>
+                          ) : (
+                              <button onClick={() => setResumeAuthMode('quiz')} className="font-bold underline hover:text-blue-600 transition-colors">
+                                  返回趣味问答
+                              </button>
+                          )}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      )}
     </>
   );
 }

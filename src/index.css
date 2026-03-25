@@ -359,20 +359,44 @@ body, html {
 /* 响应式 */
 @media (max-width: 1024px) {
     .bento-grid { grid-template-columns: repeat(2, 1fr); }
-    .slogan { font-size: 4rem; }
+    .slogan { font-size: 3rem; }
     .level2-content { flex-direction: column; }
     .side-nav { width: auto; margin: 10px; flex-direction: row; flex-wrap: wrap; padding: 20px;}
-    .project-modal { flex-direction: column; height: 90vh; }
+    .project-modal { flex-direction: column; height: 90vh; border-width: 4px; box-shadow: 10px 10px 0px rgba(255,255,255,0.2); }
     .modal-left { border-right: none; border-bottom: 4px solid #111; height: 40vh; flex: none; }
     .modal-right { padding: 20px; }
     .modal-right h2 { font-size: 2rem; }
 }
 @media (max-width: 768px) {
-    .bento-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 20px; }
+    .bento-grid { grid-template-columns: 1fr; gap: 15px; }
     .span-2 { grid-column: span 1; }
     .row-span-2 { grid-row: span 1; }
-    .hero-layout { flex-direction: column; align-items: center; }
-    .top-bar { padding: 15px; flex-direction: column; align-items: flex-start; gap: 15px; }
+    .hero-layout { flex-direction: column; align-items: center; gap: 20px; }
+    .top-bar { padding: 15px; flex-direction: column; align-items: flex-start; gap: 15px; border-bottom: 4px solid #111; }
     .top-bar-left { flex-direction: column; align-items: flex-start; gap: 10px; }
     .nickname { font-size: 1.2rem; }
+    .slogan { font-size: 3rem; letter-spacing: -1px; }
+    .brutal-card { padding: 20px; box-shadow: 6px 6px 0px #111; }
+    .brutal-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px #111; }
+    .brutal-card:active { transform: translate(4px, 4px); box-shadow: 0px 0px 0px #111; }
+    .brutal-card.bg-black { box-shadow: 6px 6px 0px #FFDE00; }
+    .brutal-card.bg-black:hover { box-shadow: 8px 8px 0px #FFDE00; }
+    .brutal-card.bg-black:active { box-shadow: 0px 0px 0px #FFDE00; }
+    .brutal-card.bg-blue { box-shadow: 6px 6px 0px #111; }
+    .action-buttons-group { flex-direction: column; width: 100%; align-items: center; }
+    .action-buttons-group .brutal-btn { width: 100%; max-width: 300px; }
+    .brutal-btn { padding: 12px 20px; font-size: 1.1rem; box-shadow: 4px 4px 0px #111; }
+    .brutal-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #111; }
+    .brutal-btn:active { transform: translate(2px, 2px); box-shadow: 0px 0px 0px #111; }
+    .micro-intro { padding: 15px; max-width: 100%; }
+    .hero-image-box { width: 180px; }
+    .card-icon { width: 35px; height: 35px; font-size: 1.4rem; }
+    .brutal-card h3 { font-size: 1.5rem; }
+    .img-stack { height: 180px; }
+    .single-img { height: 180px; }
+    .vertical-stack { height: 220px; }
+    .modal-links-row { flex-direction: column; }
+    .modal-link-btn { width: 100%; }
+    .github-btn { width: 100%; }
 }
