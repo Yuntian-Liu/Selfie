@@ -10,7 +10,9 @@ import {
   Music, 
   Gamepad2, 
   Globe,
-  PenTool
+  PenTool,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 interface Project {
@@ -163,16 +165,18 @@ const pastTimeline: TimelineItem[] = [
   { date: '2025.11', events: [{ text: '人工智能+竞赛 无奖', type: 'failure' }] },
   { date: '2025.12', events: [{ text: '入党积极分子考试 一次通过', type: 'success' }, { text: 'CET-6考试：笔试530分，听力188，阅读215，写译127；口试：良好', type: 'success' }] },
   { date: '2026.01', events: [{ text: '基于LLM的固态电池高通量分子逆合成模型 项目启动', type: 'milestone' }, { text: '大二上期末GPA：B', type: 'neutral' }, { text: 'MyScore 全栈开发 项目启动', type: 'milestone' }] },
-  { date: '2026.03', events: [{ text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
+  { date: '2026.03', events: [{ text: '获评2025~2026年度优秀团员', type: 'success' }, { text: 'Selfie 「碳碳四键丨多维空间」年度旗舰项目发布', type: 'success' }, { text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
 ];
 
 const futureTimeline: TimelineItem[] = [
   { date: '2026.03.17', events: [{ text: '参加米哈游北京城市宣讲会', type: 'neutral' }] },
+  { date: '2026.03.18', events: [{ text: '递交2025~2026年度优秀共青团员申请，参加团支部选举', type: 'neutral' }] },
   { date: '2026.03.19', events: [{ text: '投递米哈游实习', type: 'neutral' }] },
   { date: '2026.03.20', events: [{ text: '米哈游AI产品岗终止', type: 'failure' }] },
   { date: '2026.03.21', events: [{ text: '投递小米实习', type: 'neutral' }] },
   { date: '2026.03.23', events: [{ text: '投递字节跳动实习', type: 'neutral' }] },
   { date: '2026.03.25', events: [{ text: '米哈游AI Agent开发岗 初筛通过', type: 'success' }] },
+  { date: '2026.03.26', events: [{ text: '发布Selfie 「碳碳四键丨多维空间」年度旗舰项目', type: 'success' }, { text: '获评北京化工大学2025~2026年度优秀共青团员', type: 'success' }] },
 ];
 
 export default function App() {
@@ -181,6 +185,14 @@ export default function App() {
   const [activeProject, setActiveProject] = useState<Project | null>(null);
   const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [activeTimelineTab, setActiveTimelineTab] = useState<'past' | 'future'>('past');
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('portfolio-dark-mode');
+      if (saved !== null) return saved === 'true';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return false;
+  });
   
   // Phase 1 States
   const [isBooting, setIsBooting] = useState(true);
@@ -258,6 +270,15 @@ export default function App() {
       soul: '灵魂与温度',
       timeline: '回首与向前'
   };
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('portfolio-dark-mode', String(isDarkMode));
+  }, [isDarkMode]);
 
   // Phase 1: Boot Sequence Effect
   useEffect(() => {
@@ -656,9 +677,18 @@ export default function App() {
                       <span className="text-blue">[{filterNames[currentFilter]}]</span>
                   </div>
               </div>
-              <button className="top-back-btn brutal-font" onClick={backToLevel1}>
-                  <span className="btn-icon">↤</span> RETURN
-              </button>
+              <div className="flex items-center gap-4">
+                  <button 
+                      className="w-10 h-10 flex items-center justify-center border-2 border-black dark:border-white shadow-[2px_2px_0px_#000] dark:shadow-[2px_2px_0px_#f4f4f0] bg-white dark:bg-black text-black dark:text-white hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_#000] dark:hover:shadow-[4px_4px_0px_#f4f4f0] active:translate-y-1 active:shadow-none transition-all"
+                      onClick={() => setIsDarkMode(!isDarkMode)}
+                      aria-label="Toggle Dark Mode"
+                  >
+                      {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                  </button>
+                  <button className="top-back-btn brutal-font" onClick={backToLevel1}>
+                      <span className="btn-icon">↤</span> RETURN
+                  </button>
+              </div>
           </header>
 
           <div className="level2-content">
@@ -685,7 +715,7 @@ export default function App() {
                               <div className="card-icon">👤</div>
                           </div>
                           <h3 className="brutal-font">个人档案</h3>
-                          <p className="bold-cn">刘云天 / 2005 / ISFJ。<br/>北京化工大学测控技术与仪器专业 (2024-2028)。<br/>跨学科的 AI 探索者，具备将算法理论转化为实际应用的全栈能力。</p>
+                          <p className="bold-cn">刘云天 / 2005 / ISFJ / 共青团员。<br/>北京化工大学测控技术与仪器专业 (2024-2028)。<br/>跨学科的 AI 探索者，具备将算法理论转化为实际应用的全栈能力。</p>
                           <div className="mt-4 text-sm font-bold underline cursor-pointer">探索更多个人信息 ↗</div>
                       </div>
 
@@ -754,6 +784,7 @@ export default function App() {
                               <li><strong>出生年月:</strong> 2005年11月</li>
                               <li><strong>家乡:</strong> 四川绵阳</li>
                               <li><strong>状态:</strong> 本科在读</li>
+                              <li><strong>政治面貌:</strong> 共青团员</li>
                           </ul>
                       </div>
 
@@ -769,7 +800,7 @@ export default function App() {
                           <p className="bold-cn mt-2">在跨学科的背景下，探索测量、控制与人工智能的深度融合。</p>
                       </div>
 
-                      <div className="brutal-card span-2 row-span-2 bg-black text-white overflow-hidden" data-category="unique" style={{display: 'none'}}>
+                      <div className="brutal-card span-2 bg-black text-white overflow-hidden" data-category="unique" style={{display: 'none'}}>
                           <div className="card-watermark">⚡</div>
                           <div className="card-header">
                               <div className="card-tag bg-blue text-white">Advantages</div>
@@ -780,7 +811,8 @@ export default function App() {
                               <li><strong>AI 算法实践力:</strong> 熟练掌握 PyTorch，具备从模型微调 (LoRA) 到复杂架构 (Transformer, ResNet) 的实战经验。</li>
                               <li><strong>全栈工程思维:</strong> 不局限于算法，能独立完成从后端 API (FastAPI) 到前端交互 (React/Tailwind) 的完整产品交付。</li>
                               <li><strong>多智能体架构:</strong> 深入理解并应用 LangGraph，能设计复杂的 Multi-Agent 协同工作流。</li>
-                              <li><strong>快速学习与英文能力:</strong> CET-6 530分，无障碍阅读最新英文 Paper 与技术文档，保持对前沿技术的敏锐嗅觉。</li>
+                              <li><strong>快速学习与英文能力:</strong> CET-4 636分，CET-6 530分，无障碍阅读最新英文 Paper 与技术文档，保持对前沿技术的敏锐嗅觉。</li>
+                              <li><strong>主观能动性强:</strong> 善于主动学习相关内容，对于工作/学习所需要的东西能很好安排自主学习，快速上手。同时对于新兴技术部保持开放接受状态，能快速跟上技术革新与发展。积极探索如Openclaw、Skills、MCP、Prompt Engineering等创新新项目~</li>
                           </ul>
                       </div>
 
@@ -791,10 +823,10 @@ export default function App() {
                               <div className="card-icon">🧩</div>
                           </div>
                           <h3 className="brutal-font">MBTI: ISFJ</h3>
-                          <p className="bold-cn">守卫者人格。喜欢有规划、有计划地完成任务。非常细腻，能够敏锐地感知到他人情绪。善于主动学习，自主性强。有点小社恐，但是熟悉了就会很自然！</p>
+                          <p className="bold-cn">守卫者人格。喜欢有规划、有计划地完成任务。心思算是非常细腻吧！能够敏锐地感知到他人情绪。当然同样也就会比较敏感，会稍稍有点过度在意他人看法（）不过我在努力调整啦！善于主动学习，自主性强。社交方面上大学后有点小社恐，但是熟悉了就会很自然！很乐意和大家交朋友！也很喜欢探索自己感兴趣的内容，为梦想付诸努力~</p>
                       </div>
 
-                      <div className="brutal-card span-2 bg-black text-white" data-category="unique" style={{display: 'none'}}>
+                      <div className="brutal-card span-3 bg-black text-white" data-category="unique" style={{display: 'none'}}>
                           <div className="card-header">
                               <div className="card-tag bg-yellow text-black">Contact</div>
                               <div className="card-icon">🔗</div>
@@ -819,7 +851,7 @@ export default function App() {
                                   {socialError && <p className="text-red-500 mt-4 text-base font-bold bg-red-100/10 inline-block px-3 py-1 border-l-4 border-red-500">{socialError}</p>}
                               </div>
                           ) : (
-                              <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 bold-cn">
+                              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6 bold-cn">
                                   <div className="border-4 border-white p-4 bg-white text-black">
                                       <h4 className="font-black text-lg mb-3 border-b-4 border-black pb-1 uppercase">核心联系</h4>
                                       <ul className="space-y-2 font-bold">
@@ -845,6 +877,8 @@ export default function App() {
                                               <li className="flex justify-between items-center pb-1"><span className="flex items-center gap-2"><Music size={18} /> 抖音:</span> <span>Ti2O3CX86</span></li>
                                           </ul>
                                       </div>
+                                  </div>
+                                  <div className="flex flex-col gap-6">
                                       <div className="border-4 border-white p-4">
                                           <h4 className="font-black text-lg mb-3 border-b-4 border-white pb-1 text-yellow uppercase">游戏与学习</h4>
                                           <ul className="space-y-2 font-bold">
@@ -1024,14 +1058,27 @@ export default function App() {
                           </div>
                       ))}
 
-                      <div className="brutal-card bg-black text-white overflow-hidden" data-category="world" style={{display: 'none'}}>
+                      <div className="brutal-card bg-black text-white overflow-hidden flex flex-col" data-category="world" style={{display: 'none'}}>
                           <div className="card-watermark">🚀</div>
                           <div className="card-header">
                               <div className="card-tag bg-blue text-white">Exploration</div>
                               <div className="card-icon">🚀</div>
                           </div>
                           <h3 className="brutal-font text-blue">行业探索</h3>
-                          <p className="bold-cn">积极参与校招投递与前沿企业交流。曾参加米哈游等头部科技公司的宣讲会，实地调研行业需求，保持对技术落地与商业化的敏锐度。</p>
+                          <p className="bold-cn mb-4">积极参与校招投递与前沿企业交流。曾参加米哈游等头部科技公司的宣讲会，实地调研行业需求，保持对技术落地与商业化的敏锐度。</p>
+                          <div className="mt-auto pt-4 border-t-4 border-white dark:border-white">
+                              <img 
+                                  src="/images/Me_1.jpg" 
+                                  alt="行业探索" 
+                                  className="w-full h-48 object-cover border-4 border-white cursor-pointer hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all"
+                                  loading="lazy" 
+                                  referrerPolicy="no-referrer"
+                                  onClick={(e) => {
+                                      e.stopPropagation();
+                                      setLightboxImg('/images/Me_1.jpg');
+                                  }}
+                              />
+                          </div>
                       </div>
 
                       {/* ==================== 灵魂与温度 (soul) ==================== */}

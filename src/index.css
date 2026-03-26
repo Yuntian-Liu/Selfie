@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 body, html {
     margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
@@ -423,45 +424,22 @@ a, button, [role="button"], input, select, textarea {
     position: fixed;
     top: 0;
     left: 0;
-    width: 30px;
-    height: 30px;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border-radius: 50%;
     pointer-events: none;
     z-index: 999999;
     transform: translate(-50%, -50%);
-    transition: transform 0.15s ease-out;
+    transition: width 0.2s ease-out, height 0.2s ease-out, background-color 0.2s ease-out, border 0.2s ease-out;
     mix-blend-mode: difference;
-}
-/* Crosshair lines */
-.custom-cursor::before,
-.custom-cursor::after {
-    content: '';
-    position: absolute;
-    background-color: #fff; /* White will invert to black on light bg due to mix-blend-mode */
-    transition: all 0.2s ease-out;
-}
-/* Horizontal line */
-.custom-cursor::before {
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    transform: translateY(-50%);
-}
-/* Vertical line */
-.custom-cursor::after {
-    top: 0;
-    left: 50%;
-    width: 2px;
-    height: 100%;
-    transform: translateX(-50%);
 }
 
 .custom-cursor.hovering {
-    transform: translate(-50%, -50%) rotate(45deg) scale(1.5);
-}
-.custom-cursor.hovering::before,
-.custom-cursor.hovering::after {
-    background-color: #FFDE00; /* Turns yellow on hover */
+    width: 48px;
+    height: 48px;
+    background-color: transparent;
+    border: 2px solid #fff;
 }
 
 /* --- Terminal Loader --- */
@@ -579,4 +557,103 @@ a, button, [role="button"], input, select, textarea {
     90% { clip: rect(44px, 9999px, 99px, 0); }
     95% { clip: rect(77px, 9999px, 44px, 0); }
     100% { clip: rect(88px, 9999px, 55px, 0); }
+}
+
+/* --- Dark Mode Overrides --- */
+.dark body, .dark html {
+    background-color: #121212;
+    color: #f4f4f0;
+}
+.dark .bg-white { background-color: #222 !important; color: #f4f4f0 !important; }
+.dark .bg-black { background-color: #000 !important; color: #f4f4f0 !important; }
+.dark .text-black { color: #f4f4f0 !important; }
+.dark .text-white { color: #f4f4f0 !important; }
+
+.dark .brutal-box,
+.dark .brutal-card,
+.dark .top-bar,
+.dark .user-profile-mini,
+.dark .avatar-wrapper,
+.dark .nav-header,
+.dark .filter-btn:hover,
+.dark .filter-btn.active,
+.dark .modal-content,
+.dark .modal-close-btn,
+.dark .modal-left,
+.dark .modal-link-btn,
+.dark .modal-right h4,
+.dark .resume-download-modal .modal-content,
+.dark .resume-download-modal .download-options,
+.dark .resume-download-modal .download-button,
+.dark .resume-download-modal .switch-mode-button,
+.dark .resume-download-modal .fa-input,
+.dark .resume-download-modal .quiz-option,
+.dark .border-black,
+.dark .border-white {
+    border-color: #f4f4f0 !important;
+}
+
+.dark .brutal-box,
+.dark .top-bar,
+.dark .brutal-card,
+.dark .filter-btn.active,
+.dark .modal-content,
+.dark .modal-link-btn,
+.dark .resume-download-modal .modal-content,
+.dark .resume-download-modal .download-button,
+.dark .resume-download-modal .switch-mode-button,
+.dark .resume-download-modal .quiz-option,
+.dark .card-icon {
+    box-shadow: 8px 8px 0px #f4f4f0 !important;
+}
+
+.dark .brutal-card:hover { box-shadow: 14px 14px 0px #f4f4f0 !important; }
+.dark .brutal-card:active { box-shadow: 0px 0px 0px #f4f4f0 !important; }
+.dark .modal-link-btn:hover { box-shadow: 6px 6px 0px #f4f4f0 !important; }
+.dark .modal-link-btn:active { box-shadow: 0px 0px 0px #f4f4f0 !important; }
+.dark .resume-download-modal .download-button:hover { box-shadow: 6px 6px 0px #f4f4f0 !important; }
+.dark .resume-download-modal .download-button:active { box-shadow: 0px 0px 0px #f4f4f0 !important; }
+
+.dark .card-tag.bg-black { background-color: #f4f4f0 !important; color: #000 !important; }
+.dark .card-icon { background: #222 !important; color: #f4f4f0 !important; }
+.dark .badge-flagship, .dark .badge-role { border-color: #f4f4f0 !important; box-shadow: 2px 2px 0px #f4f4f0 !important; color: #000 !important; background: #f4f4f0 !important; }
+
+.dark .brutal-btn { border-color: #f4f4f0 !important; box-shadow: 6px 6px 0px #f4f4f0 !important; }
+.dark .brutal-btn:active { box-shadow: 0px 0px 0px #f4f4f0 !important; }
+
+.dark .side-nav { background-color: rgba(18, 18, 18, 0.8) !important; box-shadow: 10px 10px 0px #f4f4f0 !important; }
+.dark .filter-btn { color: #f4f4f0 !important; }
+
+.dark .modal-left { background: #000 !important; border-right-color: #f4f4f0 !important; }
+.dark .modal-close-btn { background: #f4f4f0 !important; color: #000 !important; border-color: #f4f4f0 !important; }
+.dark .modal-close-btn:hover { background: #FFDE00 !important; color: #000 !important; }
+
+.dark .modal-link-btn { background: #222 !important; color: #f4f4f0 !important; }
+.dark .modal-link-btn:hover { background: #FFDE00 !important; color: #000 !important; }
+
+.dark .brutal-card.bg-black { box-shadow: 10px 10px 0px #FFDE00 !important; }
+.dark .brutal-card.bg-blue { box-shadow: 10px 10px 0px #f4f4f0 !important; }
+
+.dark .bg-\[\#bbf7d0\] { background-color: #14532d !important; color: #f4f4f0 !important; }
+.dark .bg-\[\#fecaca\] { background-color: #7f1d1d !important; color: #f4f4f0 !important; }
+.dark .bg-\[\#fef08a\] { background-color: #713f12 !important; color: #f4f4f0 !important; }
+.dark .bg-gray-100 { background-color: #333 !important; color: #f4f4f0 !important; }
+
+.dark .timeline-container .bg-black.w-1\.5 { background-color: #f4f4f0 !important; }
+.dark .timeline-container .bg-white.border-black { background-color: #222 !important; border-color: #f4f4f0 !important; }
+.dark .timeline-container .group-hover\:bg-black:hover { background-color: #f4f4f0 !important; }
+.dark .timeline-container .hover\:-translate-y-1:hover { box-shadow: 6px 6px 0px 0px #f4f4f0 !important; }
+
+.dark .border-dashed { border-color: #666 !important; }
+.dark .noise-overlay { opacity: 0.1 !important; }
+.dark .brutal-bg-dots { background-image: radial-gradient(#f4f4f0 2px, transparent 2px) !important; opacity: 0.05 !important; }
+
+.dark .custom-cursor { background-color: #f4f4f0 !important; }
+.dark .custom-cursor.hovering { border-color: #f4f4f0 !important; background-color: transparent !important; }
+
+.dark .lightbox-img { border-color: #f4f4f0 !important; box-shadow: 10px 10px 0px #f4f4f0 !important; }
+
+/* Transitions for smooth toggle */
+body, html, .brutal-card, .top-bar, .side-nav, .modal-content, .brutal-btn, .card-tag, .card-icon, .badge-flagship, .badge-role {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
