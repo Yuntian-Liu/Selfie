@@ -110,7 +110,7 @@ const techProjects: Project[] = [
     ],
     githubUrl: 'https://github.com/Yuntian-Liu/MyScore',
     liveUrls: [
-      { label: '国内站 (V7.0)', url: 'https://ytun.com.cn' },
+      { label: '国内站 (V7.0)', url: 'http://ytun.com.cn' },
       { label: '国际站 (V7.5)', url: 'https://ytun.ltd' }
     ]
   }
@@ -182,6 +182,12 @@ export default function App() {
   const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [activeTimelineTab, setActiveTimelineTab] = useState<'past' | 'future'>('past');
   
+  // Phase 1 States
+  const [isBooting, setIsBooting] = useState(true);
+  const [bootLines, setBootLines] = useState<string[]>([]);
+  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
+  const [isHovering, setIsHovering] = useState(false);
+
   // Social Unlock State
   const [isSocialUnlocked, setIsSocialUnlocked] = useState(false);
   const [socialPasswordInput, setSocialPasswordInput] = useState('');
@@ -198,7 +204,7 @@ export default function App() {
 
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  const QUIZ_OPTIONS = ['小米', '米哈游', '鹰角网络', '哔哩哔哩', '腾讯', '美团', '字节跳动', '京东', '厚海教育', '华为', '网易游戏'];
+  const QUIZ_OPTIONS = ['小米', '米哈游', '鹰角网络', '哔哩哔哩', '腾讯', '美团', '字节跳动', '京东', '厚海教育', '华为', '网易游戏', '阿里巴巴'];
   const CORRECT_OPTIONS = ['小米', '米哈游', '字节跳动', '厚海教育'];
 
   const handleSocialUnlock = () => {
@@ -253,12 +259,153 @@ export default function App() {
       timeline: '回首与向前'
   };
 
+  // Phase 1: Boot Sequence Effect
   useEffect(() => {
-    // Initial entrance animation
-    gsap.to(".slogan", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
-    gsap.to(".tags", { opacity: 1, duration: 1, delay: 0.4 });
-    gsap.to(".hero-layout", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.6 });
-    gsap.to(".action-buttons-group", { opacity: 1, duration: 1, delay: 0.8 });
+    const lines = [
+        "INITIATING SYSTEM BOOT...",
+        "LOADING KERNEL MODULES [OK]",
+        "MOUNTING VIRTUAL FILESYSTEM [OK]",
+        "STARTING NEURAL NETWORK ENGINE...",
+        "CONNECTING TO MULTIVERSE NODES...",
+        "ESTABLISHING SECURE UPLINK [OK]",
+        "DECODING THE FUTURE...",
+        "ACCESS GRANTED."
+    ];
+    
+    let currentLine = 0;
+    const interval = setInterval(() => {
+        if (currentLine < lines.length) {
+            setBootLines(prev => [...prev, lines[currentLine]]);
+            currentLine++;
+        } else {
+            clearInterval(interval);
+            setTimeout(() => setIsBooting(false), 800);
+        }
+    }, 150);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  // Phase 1: Custom Cursor Effect
+  useEffect(() => {
+    const updateCursor = (e: MouseEvent) => {
+        setCursorPos({ x: e.clientX, y: e.clientY });
+    };
+    
+    const handleMouseOver = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const isClickable = 
+            window.getComputedStyle(target).cursor === 'pointer' || 
+            target.tagName.toLowerCase() === 'a' || 
+            target.tagName.toLowerCase() === 'button' ||
+            target.closest('a') ||
+            target.closest('button');
+            
+        setIsHovering(!!isClickable);
+    };
+
+    window.addEventListener('mousemove', updateCursor);
+    window.addEventListener('mouseover', handleMouseOver);
+    
+    return () => {
+        window.removeEventListener('mousemove', updateCursor);
+        window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isBooting) {
+        // Initial entrance animation
+        gsap.to(".slogan", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+        gsap.to(".tags", { opacity: 1, duration: 1, delay: 0.4 });
+        gsap.to(".hero-layout", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.6 });
+        gsap.to(".action-buttons-group", { opacity: 1, duration: 1, delay: 0.8 });
+    }
+  }, [isBooting]);
+
+  // Phase 2: Canvas Dynamic Background
+  useEffect(() => {
+    const container = document.getElementById('canvas-container');
+    if (!container) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.style.inset = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    container.appendChild(canvas);
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let particles: { x: number, y: number, vx: number, vy: number, radius: number }[] = [];
+
+    const resize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        initParticles();
+    };
+
+    const initParticles = () => {
+        particles = [];
+        const numParticles = Math.floor((window.innerWidth * window.innerHeight) / 15000); // Responsive density
+        for (let i = 0; i < numParticles; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: (Math.random() - 0.5) * 0.8,
+                radius: Math.random() * 1.5 + 0.5
+            });
+        }
+    };
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    const draw = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Brutalist tech colors: dark grey lines on light bg
+        ctx.fillStyle = 'rgba(17, 17, 17, 0.4)';
+        ctx.strokeStyle = 'rgba(17, 17, 17, 0.15)';
+        ctx.lineWidth = 1;
+
+        particles.forEach((p, i) => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+            if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            for (let j = i + 1; j < particles.length; j++) {
+                const p2 = particles[j];
+                const dx = p.x - p2.x;
+                const dy = p.y - p2.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                }
+            }
+        });
+        animationFrameId = requestAnimationFrame(draw);
+    };
+    draw();
+
+    return () => {
+        window.removeEventListener('resize', resize);
+        cancelAnimationFrame(animationFrameId);
+        if (container.contains(canvas)) container.removeChild(canvas);
+    };
   }, []);
 
   const transitionToLevel2 = () => {
@@ -267,9 +414,20 @@ export default function App() {
     const level2 = document.querySelector('.level2') as HTMLElement;
     const topBar = document.querySelector('.top-bar');
 
+    // Phase 2: Enhanced Cinematic Transition
+    // 1. Scale down and fade out Level 1 like a CRT TV turning off
+    gsap.to(level1, { 
+        scale: 0.9, 
+        opacity: 0, 
+        duration: 0.6, 
+        ease: "power3.inOut" 
+    });
+
+    // 2. Slam down the transition overlay
     gsap.to(overlay, { 
         y: "0%", 
         duration: 0.5,
+        delay: 0.3, // Wait for Level 1 to start shrinking
         ease: "power4.inOut",
         onComplete: () => {
             if (level1) level1.style.display = 'none';
@@ -283,9 +441,10 @@ export default function App() {
 
             animateCardsEntrance();
             
+            // 3. Pull up the overlay to reveal Level 2
             gsap.to(overlay, { 
                 y: "-100%", 
-                duration: 0.5, 
+                duration: 0.6, 
                 ease: "power4.inOut",
                 onComplete: () => gsap.set(overlay, { y: "100%" })
             });
@@ -315,9 +474,14 @@ export default function App() {
     const level1 = document.querySelector('.level1') as HTMLElement;
     const level2 = document.querySelector('.level2') as HTMLElement;
     
+    // 1. Fade out Level 2
+    gsap.to(level2, { opacity: 0, duration: 0.4, ease: "power2.in" });
+
+    // 2. Slam down overlay
     gsap.to(overlay, { 
         y: "0%", 
         duration: 0.5,
+        delay: 0.2,
         ease: "power4.inOut",
         onComplete: () => {
             if (level2) {
@@ -327,12 +491,22 @@ export default function App() {
             
             if (level1) {
               level1.style.display = 'flex';
+              gsap.set(level1, { scale: 0.9, opacity: 0 });
             }
             
+            // 3. Pull up overlay and scale up Level 1
             gsap.to(overlay, { 
                 y: "100%", 
-                duration: 0.5, 
+                duration: 0.6, 
                 ease: "power4.inOut"
+            });
+
+            gsap.to(level1, {
+                scale: 1,
+                opacity: 1,
+                duration: 0.8,
+                ease: "back.out(1.2)",
+                delay: 0.2
             });
         }
     });
@@ -402,19 +576,39 @@ export default function App() {
 
   return (
     <>
+      {/* Phase 1: Custom Cursor */}
+      <div 
+          className={`custom-cursor ${isHovering ? 'hovering' : ''}`} 
+          style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
+      ></div>
+
+      {/* Phase 1: Terminal Boot Screen */}
+      {isBooting && (
+          <div className="terminal-loader">
+              {bootLines.map((line, i) => (
+                  <div key={i} className="terminal-line">{line}</div>
+              ))}
+              <div className="terminal-line"><span className="terminal-cursor"></span></div>
+          </div>
+      )}
+
       <div className="noise-overlay"></div>
       <div className="brutal-bg-dots"></div>
 
       <div id="canvas-container"></div>
 
-      <div className="transition-overlay"></div>
+      <div className="transition-overlay">
+          <span className="glitch-text" data-text="[ SYSTEM OVERRIDE ]">[ SYSTEM OVERRIDE ]</span>
+      </div>
 
       <button className="scroll-top-btn brutal-btn bg-yellow" onClick={scrollToTop}>↑</button>
 
       {/* Level 1 */}
-      <div className="ui-container level1">
+      <div className="ui-container level1" style={{ display: isBooting ? 'none' : 'flex' }}>
           <h1 className="slogan brutal-font">
-              [ DECODING <span className="bg-yellow text-black px-2">THE FUTURE</span> ]
+              <span className="glitch-text" data-text="[ DECODING THE FUTURE ]">
+                  [ DECODING <span className="bg-yellow text-black px-2">THE FUTURE</span> ]
+              </span>
           </h1>
           <p className="tags bold-cn">AI算法 / 全栈开发 / 多智能体架构</p>
 
@@ -425,7 +619,7 @@ export default function App() {
                   <p>💻 独立完成从算法到全栈的工程化落地</p>
               </div>
               <div className="hero-image-box brutal-box bg-blue brutal-img-container">
-                  <img src="/images/Me_1.jpg" alt="刘云天" className="brutal-img" referrerPolicy="no-referrer" />
+                  <img src="/images/Me_1.jpg" alt="刘云天" className="brutal-img" loading="lazy" referrerPolicy="no-referrer" />
               </div>
           </div>
 
@@ -449,7 +643,7 @@ export default function App() {
               <div className="top-bar-left">
                   <div className="user-profile-mini">
                       <div className="avatar-wrapper">
-                          <img src="/images/Me_1.jpg" alt="Avatar" className="avatar-mini" />
+                          <img src="/images/Me_1.jpg" alt="Avatar" className="avatar-mini" loading="lazy" referrerPolicy="no-referrer" />
                       </div>
                       <div className="user-info">
                           <span className="nickname brutal-font">碳碳四键</span>
@@ -468,7 +662,7 @@ export default function App() {
           </header>
 
           <div className="level2-content">
-              <aside className="side-nav brutal-box bg-white">
+              <aside className="side-nav brutal-box">
                   <div className="nav-header brutal-font">SYS.MENU</div>
                   <button className={`filter-btn ${currentFilter === 'all' ? 'active' : ''}`} onClick={() => applyFilter('all')}># 核心全景</button>
                   <button className={`filter-btn ${currentFilter === 'unique' ? 'active' : ''}`} onClick={() => applyFilter('unique')}># 独一无二</button>
@@ -503,8 +697,8 @@ export default function App() {
                               <div className="card-icon">💻</div>
                           </div>
                           <div className="img-stack dual-stack pointer-events-none">
-                              <img src="/images/SolidState_Agent_1.jpg" alt="Tech 1" className="stack-img img-1 brutal-filter" />
-                              <img src="/images/AI_Medical_2.jpg" alt="Tech 2" className="stack-img img-2 brutal-filter" />
+                              <img src="/images/SolidState_Agent_1.jpg" alt="Tech 1" className="stack-img img-1 brutal-filter" loading="lazy" referrerPolicy="no-referrer" />
+                              <img src="/images/AI_Medical_2.jpg" alt="Tech 2" className="stack-img img-2 brutal-filter" loading="lazy" referrerPolicy="no-referrer" />
                           </div>
                           <h3 className="brutal-font text-blue">算法与工程的熔炉</h3>
                           <p className="bold-cn">涵盖 PyTorch, 大模型微调, LangGraph 等 AI 算法，以及 React, Tailwind, Serverless 等全栈工程。<br/>从极小样本医学图像诊断到多智能体协同架构，再到全栈落地。</p>
@@ -858,7 +1052,12 @@ export default function App() {
                               <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 gap-4">
                                   {/* Item 1 */}
                                   <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
-                                      <img src="/images/MAIL.png" alt="蓝信封" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <img 
+                                          src="/images/MAIL.png" 
+                                          alt="蓝信封" 
+                                          className="w-16 h-16 object-cover border-2 border-white cursor-pointer hover:opacity-80 transition-opacity" 
+                                          onClick={(e) => { e.stopPropagation(); setLightboxImg('/images/MAIL.png'); }}
+                                      />
                                       <div>
                                           <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
                                               蓝信封 
@@ -871,7 +1070,12 @@ export default function App() {
                                   </div>
                                   {/* Item 2 */}
                                   <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
-                                      <img src="/images/Volunteer_1.jpg" alt="迎新志愿者" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <img 
+                                          src="/images/Volunteer_1.jpg" 
+                                          alt="迎新志愿者" 
+                                          className="w-16 h-16 object-cover border-2 border-white cursor-pointer hover:opacity-80 transition-opacity" 
+                                          onClick={(e) => { e.stopPropagation(); setLightboxImg('/images/Volunteer_1.jpg'); }}
+                                      />
                                       <div>
                                           <h4 className="font-bold text-lg brutal-font tracking-wide">2025级开学迎新志愿者</h4>
                                           <p className="text-sm opacity-80 font-bold mt-1">2025.09.07</p>
@@ -879,7 +1083,12 @@ export default function App() {
                                   </div>
                                   {/* Item 3 */}
                                   <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
-                                      <img src="/images/OFO.png" alt="单车猎人行动" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <img 
+                                          src="/images/OFO.png" 
+                                          alt="单车猎人行动" 
+                                          className="w-16 h-16 object-cover border-2 border-white cursor-pointer hover:opacity-80 transition-opacity" 
+                                          onClick={(e) => { e.stopPropagation(); setLightboxImg('/images/OFO.png'); }}
+                                      />
                                       <div>
                                           <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
                                               单车猎人行动
@@ -892,7 +1101,12 @@ export default function App() {
                                   </div>
                                   {/* Item 4 */}
                                   <div className="flex items-center gap-4 bg-black p-4 border-4 border-white transform transition-transform hover:-translate-y-1 hover:shadow-[4px_4px_0px_white]">
-                                      <img src="/images/TAI.png" alt="诗琳通公主访华" className="w-16 h-16 object-cover border-2 border-white" />
+                                      <img 
+                                          src="/images/TAI.png" 
+                                          alt="诗琳通公主访华" 
+                                          className="w-16 h-16 object-cover border-2 border-white cursor-pointer hover:opacity-80 transition-opacity" 
+                                          onClick={(e) => { e.stopPropagation(); setLightboxImg('/images/TAI.png'); }}
+                                      />
                                       <div>
                                           <h4 className="font-bold text-lg flex items-center gap-2 brutal-font tracking-wide">
                                               诗琳通公主访华
@@ -930,6 +1144,13 @@ export default function App() {
                           </div>
                           <h3 className="brutal-font">多维爱好</h3>
                           <p className="bold-cn">在技术之外，拥有丰富的精神世界。探索不同的生活方式，保持对生活的热爱与创造力。</p>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                              <span className="border-2 border-black px-2 py-1 bg-white text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">📺 ACG及衍生IP</span>
+                              <span className="border-2 border-black px-2 py-1 bg-[#bbf7d0] text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎮 游戏IP</span>
+                              <span className="border-2 border-black px-2 py-1 bg-[#fecaca] text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🎬 影视IP</span>
+                              <span className="border-2 border-black px-2 py-1 bg-[#bfdbfe] text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🏃 运动</span>
+                              <span className="border-2 border-black px-2 py-1 bg-white text-xs font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">🛠️ 综合技能</span>
+                          </div>
                           <div className="mt-4 text-sm font-bold text-black underline">点击查看详情 ↗</div>
                       </div>
 
@@ -965,7 +1186,7 @@ export default function App() {
                               {/* The Line */}
                               <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1.5 bg-black md:-translate-x-1/2"></div>
                               
-                              {(activeTimelineTab === 'past' ? pastTimeline : futureTimeline).map((item, index) => {
+                              {[...(activeTimelineTab === 'past' ? pastTimeline : futureTimeline)].reverse().map((item, index) => {
                               const isEven = index % 2 === 0;
                               return (
                                   <div key={index} className={`relative flex flex-col md:flex-row items-start md:items-center w-full mb-12 md:mb-20 group ${isEven ? 'md:flex-row-reverse' : ''}`}>
@@ -1002,6 +1223,30 @@ export default function App() {
                       </div>
 
                   </div>
+
+                  {/* Footer */}
+                  <footer className="mt-16 border-t-8 border-black pt-8 pb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                      <div className="flex flex-col items-center md:items-start gap-2 text-center md:text-left">
+                          <h2 className="text-xl md:text-2xl font-black brutal-font uppercase tracking-tight">碳碳四键的个人开发实践项目-3</h2>
+                          <div className="font-bold text-sm md:text-base opacity-80 flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
+                              <span>Copyright ©LYT 2024-2026</span>
+                              <span className="hidden sm:inline">|</span>
+                              <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-blue-600 transition-colors">蜀ICP备2026006689-3号</a>
+                          </div>
+                      </div>
+                      
+                      <a 
+                          href="https://github.com/Yuntian-Liu/Selfie" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-3 bg-black text-white px-6 py-4 border-4 border-black hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-white hover:text-black transition-all group"
+                      >
+                          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="group-hover:fill-black transition-colors">
+                              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                          </svg>
+                          <span className="font-black text-lg uppercase tracking-wider brutal-font">Open Source</span>
+                      </a>
+                  </footer>
               </main>
           </div>
       </div>
@@ -1009,7 +1254,7 @@ export default function App() {
       {/* Lightbox Overlay */}
       <div className={`lightbox-overlay ${lightboxImg ? 'active' : ''}`} onClick={closeLightbox}>
           <div className="lightbox-close" onClick={closeLightbox}>✕</div>
-          {lightboxImg && <img src={lightboxImg} alt="Enlarged view" className="lightbox-img" />}
+          {lightboxImg && <img src={lightboxImg} alt="Enlarged view" className="lightbox-img" loading="lazy" referrerPolicy="no-referrer" />}
       </div>
 
       {/* Project Detail Modal */}
@@ -1150,7 +1395,7 @@ export default function App() {
       {/* Resume Download Modal */}
       {isResumeModalOpen && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => setIsResumeModalOpen(false)}>
-              <div className="bg-white border-4 md:border-8 border-black w-full max-w-2xl relative shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)]" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-white border-4 md:border-8 border-black w-full max-w-4xl relative shadow-[8px_8px_0px_0px_rgba(255,255,255,0.2)] md:shadow-[16px_16px_0px_0px_rgba(255,255,255,0.2)] max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                   <button className="absolute top-4 right-4 w-10 h-10 bg-black text-white font-black text-xl hover:bg-red-500 transition-colors" onClick={() => setIsResumeModalOpen(false)}>✕</button>
                   
                   <div className="p-4 md:p-8 border-b-4 md:border-b-8 border-black bg-yellow">
@@ -1160,25 +1405,42 @@ export default function App() {
 
                   <div className="p-4 md:p-8">
                       {isResumeReady ? (
-                          <div className="flex flex-col items-center gap-6 py-8">
-                              <div className="text-6xl">✅</div>
-                              <h3 className="text-3xl font-black brutal-font">验证成功</h3>
-                              <p className="font-bold text-lg text-center">您的身份已确认，可以下载简历了。</p>
-                              <a 
-                                  href="resume.pdf" 
-                                  download="刘云天_简历.pdf" 
-                                  className="brutal-btn bg-green-400 text-black px-8 py-4 text-xl hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all inline-block text-center w-full mt-4"
-                                  onClick={() => {
-                                      setTimeout(() => {
-                                          setIsResumeModalOpen(false);
-                                          setIsResumeReady(false);
-                                          setSelectedCompanies([]);
-                                          setFaPasswordInput('');
-                                      }, 1000);
-                                  }}
-                              >
-                                  ⬇️ 点击下载简历
-                              </a>
+                          <div className="flex flex-col md:flex-row gap-8 py-4 items-stretch">
+                              {/* Left: Preview */}
+                              <div className="flex-1 flex flex-col gap-4">
+                                  <div className="bg-black text-white px-3 py-1 inline-block font-bold self-start">📄 简历预览 (PREVIEW)</div>
+                                  <div className="w-full h-[500px] border-4 border-black bg-gray-100 overflow-hidden">
+                                      <iframe src="/resume.pdf" className="w-full h-full" title="Resume Preview" />
+                                  </div>
+                              </div>
+                              
+                              {/* Right: Status & Download */}
+                              <div className="md:w-1/3 flex flex-col gap-4">
+                                  <div className="bg-black text-white px-3 py-1 inline-block font-bold self-start">📥 下载选项 (DOWNLOAD)</div>
+                                  <div className="flex-1 flex flex-col items-center justify-center text-center gap-6 border-4 border-dashed border-black p-6 bg-green-50 min-h-[500px]">
+                                      <div className="text-6xl animate-bounce">✅</div>
+                                      <h3 className="text-2xl font-black brutal-font">验证成功</h3>
+                                      <p className="font-bold text-base">您的身份已确认，请点击下方按钮下载完整 PDF 文件。</p>
+                                      <a 
+                                          href="resume.pdf" 
+                                          download="刘云天_简历.pdf" 
+                                          className="brutal-btn bg-green-400 text-black px-6 py-4 text-lg hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all w-full"
+                                          onClick={() => {
+                                              setTimeout(() => {
+                                                  setIsResumeModalOpen(false);
+                                                  setIsResumeReady(false);
+                                                  setSelectedCompanies([]);
+                                                  setFaPasswordInput('');
+                                              }, 1000);
+                                          }}
+                                      >
+                                          ⬇️ 立即下载
+                                      </a>
+                                      <div className="text-xs font-bold opacity-60 mt-auto">
+                                          * 预览仅供快速查看<br/>建议下载后阅读
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
                       ) : resumeAuthMode === 'quiz' ? (
                           <div className="flex flex-col gap-6">
