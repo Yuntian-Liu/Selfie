@@ -12,9 +12,7 @@ import {
   Globe,
   PenTool,
   Sun,
-  Moon,
-  Eye,
-  EyeOff
+  Moon
 } from 'lucide-react';
 
 interface Project {
@@ -83,8 +81,8 @@ const techProjects: Project[] = [
     isFlagship: false,
     layoutClass: 'bg-white',
     tagClass: 'bg-black text-white',
-    images: ['/images/Gradify_1.png', '/images/Gradify_2.jpg', '/images/Gradify_3.jpg', '/images/Gradify_4.png'],
-    coverImages: ['/images/Gradify_1.png', '/images/Gradify_2.jpg', '/images/Gradify_3.jpg'],
+    images: ['/images/Gradify_1.png', '/images/Gradify_2.png', '/images/Gradify_3.png'],
+    coverImages: ['/images/Gradify_3.png', '/images/Gradify_1.png', '/images/Gradify_2.png'],
     shortDesc: 'FastAPI+JS构建，独创“三明治式”Prompt架构，结合Few-shot约束LLM生成解析，采用SSE流式输出，批改效率提升7.5倍。',
     details: [
       '独立负责前后端全栈开发，后端采用 FastAPI 提供高性能接口，前端采用原生 JS + Tailwind CSS 构建响应式界面。',
@@ -92,10 +90,7 @@ const techProjects: Project[] = [
       '实现基于 SSE (Server-Sent Events) 的流式输出，让用户实时看到批改过程，大幅提升交互体验。',
       '系统上线后，英语作业批改效率提升 7.5 倍，有效释放教学人力，获得师生一致好评。'
     ],
-    githubUrl: 'https://github.com/Yuntian-Liu/Gradify',
-    liveUrls: [
-      { label: '在线体验', url: 'https://gradify.ytunx.com/' }
-    ]
+    githubUrl: 'https://github.com/Yuntian-Liu/Gradify'
   },
   {
     id: 'myscore',
@@ -182,8 +177,6 @@ const futureTimeline: TimelineItem[] = [
   { date: '2026.03.23', events: [{ text: '投递字节跳动实习', type: 'neutral' }] },
   { date: '2026.03.25', events: [{ text: '米哈游AI Agent开发岗 初筛通过', type: 'success' }] },
   { date: '2026.03.26', events: [{ text: '发布Selfie 「碳碳四键丨多维空间」年度旗舰项目', type: 'success' }, { text: '获评北京化工大学2025~2026年度优秀共青团员', type: 'success' }] },
-  { date: '2026.03.29', events: [{ text: 'Gradify Studio正式发布 Gradify项目正式建站', type: 'success' }] },
-  { date: '2026.03.30', events: [{ text: '米哈游AI Agent开发岗 部门评估终止', type: 'failure' }] },
 ];
 
 export default function App() {
@@ -210,7 +203,6 @@ export default function App() {
   // Social Unlock State
   const [isSocialUnlocked, setIsSocialUnlocked] = useState(false);
   const [socialPasswordInput, setSocialPasswordInput] = useState('');
-  const [showSocialPassword, setShowSocialPassword] = useState(false);
   const [socialError, setSocialError] = useState('');
 
   // Resume Modal State
@@ -218,7 +210,6 @@ export default function App() {
   const [resumeAuthMode, setResumeAuthMode] = useState<'quiz' | 'fa'>('quiz');
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const [faPasswordInput, setFaPasswordInput] = useState('');
-  const [showFaPassword, setShowFaPassword] = useState(false);
   const [resumeError, setResumeError] = useState('');
   const [isResumeReady, setIsResumeReady] = useState(false);
   const [isHobbiesModalOpen, setIsHobbiesModalOpen] = useState(false);
@@ -649,7 +640,7 @@ export default function App() {
                   <p>💻 独立完成从算法到全栈的工程化落地</p>
               </div>
               <div className="hero-image-box brutal-box bg-blue brutal-img-container">
-                  <img src="/images/Me_1.png" alt="刘云天" className="brutal-img" loading="lazy" referrerPolicy="no-referrer" />
+                  <img src="/images/Me_1.jpg" alt="刘云天" className="brutal-img" loading="lazy" referrerPolicy="no-referrer" />
               </div>
           </div>
 
@@ -673,7 +664,7 @@ export default function App() {
               <div className="top-bar-left">
                   <div className="user-profile-mini">
                       <div className="avatar-wrapper">
-                          <img src="/images/Me_1.png" alt="Avatar" className="avatar-mini" loading="lazy" referrerPolicy="no-referrer" />
+                          <img src="/images/Me_1.jpg" alt="Avatar" className="avatar-mini" loading="lazy" referrerPolicy="no-referrer" />
                       </div>
                       <div className="user-info">
                           <span className="nickname brutal-font">碳碳四键</span>
@@ -846,22 +837,13 @@ export default function App() {
                               <div className="mt-6 p-6 border-4 border-white bg-black">
                                   <p className="bold-cn mb-4 text-lg">⚠️ 访问受限：请输入社交密钥以解锁联系方式。</p>
                                   <div className="flex flex-col sm:flex-row gap-4">
-                                      <div className="relative flex-1">
-                                          <input 
-                                              type={showSocialPassword ? "text" : "password"} 
-                                              value={socialPasswordInput} 
-                                              onChange={(e) => setSocialPasswordInput(e.target.value)} 
-                                              className="w-full bg-white text-black px-4 py-3 pr-12 outline-none border-4 border-white focus:border-yellow font-bold text-lg" 
-                                              placeholder="Enter Key..." 
-                                          />
-                                          <button 
-                                              type="button"
-                                              onClick={() => setShowSocialPassword(!showSocialPassword)}
-                                              className="absolute right-3 top-1/2 -translate-y-1/2 text-black hover:text-gray-600 transition-colors"
-                                          >
-                                              {showSocialPassword ? <EyeOff size={24} /> : <Eye size={24} />}
-                                          </button>
-                                      </div>
+                                      <input 
+                                          type="password" 
+                                          value={socialPasswordInput} 
+                                          onChange={(e) => setSocialPasswordInput(e.target.value)} 
+                                          className="flex-1 bg-white text-black px-4 py-3 outline-none border-4 border-white focus:border-yellow font-bold text-lg" 
+                                          placeholder="Enter Key..." 
+                                      />
                                       <button onClick={handleSocialUnlock} className="brutal-btn bg-yellow text-black px-8 py-3 text-lg hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all">
                                           UNLOCK
                                       </button>
@@ -966,22 +948,9 @@ export default function App() {
                               </div>
                               <div className="bg-black text-white border-4 border-black p-3 shadow-[4px_4px_0px_#fff]">
                                   <h4 className="font-black text-md mb-2 flex items-center gap-2"><span className="text-xl">☁️</span> 云端基建</h4>
-                                  <ul className="bold-cn text-sm space-y-3 mb-3">
-                                      <li className="flex flex-col gap-1">
-                                          <div className="flex items-center gap-2">
-                                              <strong>服务器 1</strong>
-                                              <span className="text-xs bg-white text-black px-1.5 py-0.5 font-bold flex items-center gap-1">📍 北京</span>
-                                          </div>
-                                          <span className="text-gray-300">Ubuntu 22.04 LTS</span>
-                                      </li>
-                                      <li className="flex flex-col gap-1">
-                                          <div className="flex items-center gap-2">
-                                              <strong>服务器 2</strong>
-                                              <span className="text-xs bg-white text-black px-1.5 py-0.5 font-bold flex items-center gap-1">📍 新加坡</span>
-                                          </div>
-                                          <span className="text-gray-300">Zeabur (Tencent) 2C4G 30M</span>
-                                      </li>
-                                      <li className="pt-2"><strong>架构:</strong> Supabase, Netlify, Serverless</li>
+                                  <ul className="bold-cn text-sm space-y-1 mb-3">
+                                      <li><strong>服务器:</strong> Ubuntu 22.04 LTS</li>
+                                      <li><strong>架构:</strong> Supabase, Netlify, Serverless</li>
                                   </ul>
                                   <div className="border-t-2 border-dashed border-gray-600 pt-3 mt-2">
                                       <strong className="text-sm block mb-2 text-yellow">🌐 个人域名矩阵:</strong>
@@ -1099,14 +1068,14 @@ export default function App() {
                           <p className="bold-cn mb-4">积极参与校招投递与前沿企业交流。曾参加米哈游等头部科技公司的宣讲会，实地调研行业需求，保持对技术落地与商业化的敏锐度。</p>
                           <div className="mt-auto pt-4 border-t-4 border-white dark:border-white">
                               <img 
-                                  src="/images/Me_1.png" 
+                                  src="/images/Me_1.jpg" 
                                   alt="行业探索" 
                                   className="w-full h-48 object-cover border-4 border-white cursor-pointer hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] transition-all"
                                   loading="lazy" 
                                   referrerPolicy="no-referrer"
                                   onClick={(e) => {
                                       e.stopPropagation();
-                                      setLightboxImg('/images/Me_1.png');
+                                      setLightboxImg('/images/Me_1.jpg');
                                   }}
                               />
                           </div>
@@ -1545,22 +1514,13 @@ export default function App() {
                               <div className="bg-black text-white p-4 font-bold text-lg">
                                   🔑 快速通行卡 (FA) 验证
                               </div>
-                              <div className="relative w-full">
-                                  <input 
-                                      type={showFaPassword ? "text" : "password"} 
-                                      value={faPasswordInput} 
-                                      onChange={(e) => setFaPasswordInput(e.target.value)} 
-                                      className="w-full bg-gray-100 text-black px-6 py-4 pr-14 outline-none border-4 border-black focus:border-yellow font-bold text-xl" 
-                                      placeholder="Enter FA Key..." 
-                                  />
-                                  <button 
-                                      type="button"
-                                      onClick={() => setShowFaPassword(!showFaPassword)}
-                                      className="absolute right-4 top-1/2 -translate-y-1/2 text-black hover:text-gray-600 transition-colors"
-                                  >
-                                      {showFaPassword ? <EyeOff size={28} /> : <Eye size={28} />}
-                                  </button>
-                              </div>
+                              <input 
+                                  type="password" 
+                                  value={faPasswordInput} 
+                                  onChange={(e) => setFaPasswordInput(e.target.value)} 
+                                  className="w-full bg-gray-100 text-black px-6 py-4 outline-none border-4 border-black focus:border-yellow font-bold text-xl" 
+                                  placeholder="Enter FA Key..." 
+                              />
                               <button onClick={handleResumeFASubmit} className="brutal-btn bg-yellow text-black w-full py-4 text-xl mt-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all">
                                   验证并下载
                               </button>
