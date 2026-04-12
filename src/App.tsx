@@ -170,7 +170,8 @@ const pastTimeline: TimelineItem[] = [
   { date: '2025.11', events: [{ text: '人工智能+竞赛 无奖', type: 'failure' }] },
   { date: '2025.12', events: [{ text: '入党积极分子考试 一次通过', type: 'success' }, { text: 'CET-6考试：笔试530分，听力188，阅读215，写译127；口试：良好', type: 'success' }] },
   { date: '2026.01', events: [{ text: '基于LLM的固态电池高通量分子逆合成模型 项目启动', type: 'milestone' }, { text: '大二上期末GPA：B', type: 'neutral' }, { text: 'MyScore 全栈开发 项目启动', type: 'milestone' }] },
-  { date: '2026.03', events: [{ text: '获评2025~2026年度优秀团员', type: 'success' }, { text: 'Selfie 「碳碳四键丨多维空间」年度旗舰项目发布', type: 'success' }, { text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
+  { date: '2026.03', events: [{ text: '获评学院2025~2026年度优秀团员', type: 'success' }, { text: 'Selfie 「碳碳四键丨多维空间」年度旗舰项目发布', type: 'success' }, { text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
+  { date: '2026.04', events: [{ text: '获评2025~2026年度支部团员评议优秀', type: 'success' }] },
 ];
 
 const futureTimeline: TimelineItem[] = [
@@ -184,6 +185,10 @@ const futureTimeline: TimelineItem[] = [
   { date: '2026.03.26', events: [{ text: '发布Selfie 「碳碳四键丨多维空间」年度旗舰项目', type: 'success' }, { text: '获评北京化工大学2025~2026年度优秀共青团员', type: 'success' }] },
   { date: '2026.03.29', events: [{ text: 'Gradify Studio正式发布 Gradify项目正式建站', type: 'success' }] },
   { date: '2026.03.30', events: [{ text: '米哈游AI Agent开发岗 部门评估终止', type: 'failure' }] },
+  { date: '2026.04.02', events: [{ text: '小米AI研发实习生 岗位终止', type: 'failure' }] },
+  { date: '2026.04.07', events: [{ text: '米哈游校园招聘解锁限定复活 岗位流转HR投递邀请', type: 'neutral' }] },
+  { date: '2026.04.08', events: [{ text: '岗位流转—投递米哈游游戏测试开发实习生', type: 'neutral' }] },
+  { date: '2026.04.10', events: [{ text: '米哈游游戏测试开发实习生 HR初筛、部门评估通过，待发测试', type: 'success' }, { text: '厚海原版英语 发放2026-03 工资', type: 'success' }] },
 ];
 
 export default function App() {
