@@ -171,7 +171,7 @@ const pastTimeline: TimelineItem[] = [
   { date: '2025.12', events: [{ text: '入党积极分子考试 一次通过', type: 'success' }, { text: 'CET-6考试：笔试530分，听力188，阅读215，写译127；口试：良好', type: 'success' }] },
   { date: '2026.01', events: [{ text: '基于LLM的固态电池高通量分子逆合成模型 项目启动', type: 'milestone' }, { text: '大二上期末GPA：B', type: 'neutral' }, { text: 'MyScore 全栈开发 项目启动', type: 'milestone' }] },
   { date: '2026.03', events: [{ text: '获评学院2025~2026年度优秀团员', type: 'success' }, { text: 'Selfie 「碳碳四键丨多维空间」年度旗舰项目发布', type: 'success' }, { text: 'Gradify 全栈开发 项目启动', type: 'milestone' }] },
-  { date: '2026.04', events: [{ text: '获评2025~2026年度支部团员评议优秀', type: 'success' }] },
+  { date: '2026.04', events: [{ text: '参加雅思IELTS考试，首考总分高配6.0', type: 'failure' }, { text: '获评2025~2026年度支部团员评议优秀', type: 'success' }] },
 ];
 
 const futureTimeline: TimelineItem[] = [
@@ -188,7 +188,15 @@ const futureTimeline: TimelineItem[] = [
   { date: '2026.04.02', events: [{ text: '小米AI研发实习生 岗位终止', type: 'failure' }] },
   { date: '2026.04.07', events: [{ text: '米哈游校园招聘解锁限定复活 岗位流转HR投递邀请', type: 'neutral' }] },
   { date: '2026.04.08', events: [{ text: '岗位流转—投递米哈游游戏测试开发实习生', type: 'neutral' }] },
-  { date: '2026.04.10', events: [{ text: '米哈游游戏测试开发实习生 HR初筛、部门评估通过，待发测试', type: 'success' }, { text: '厚海原版英语 发放2026-03 工资', type: 'success' }] },
+  { date: '2026.04.10', events: [{ text: '米哈游游戏测试开发实习生 HR初筛、部门评估通过，待发测试', type: 'success' }] },
+  { date: '2026.04.20', events: [{ text: '飞书AI校园挑战赛——个人开放创新赛道\n入围复赛', type: 'success' }] },
+  { date: '2026.04.21', events: [{ text: '米哈游游戏测试开发实习生 测试评估终止', type: 'failure' }] },
+  { date: '2026.04.24', events: [{ text: '岗位流转——投递米哈游游戏测试工程师实习生', type: 'neutral' }] },
+  { date: '2026.04.25', events: [{ text: '米哈游游戏测试工程师实习生 HR初筛、部门评估通过，待发测试', type: 'success' }] },
+  { date: '2026.04.26', events: [{ text: '参加雅思IELTS全科考试', type: 'neutral' }] },
+  { date: '2026.04.29', events: [{ text: '雅思IELTS首考 总分高配6.0，其中L：6.5，R：6.5，W：6.0，S：5.5', type: 'failure' }] },
+  { date: '2026.05.10', events: [{ text: '飞书AI校园挑战赛 止步决赛', type: 'failure' }] },
+  { date: '2026.05.13', events: [{ text: '飞书AI校园挑战赛\n获得飞书实习直通终面资格', type: 'success' }] },
 ];
 
 export default function App() {
@@ -825,7 +833,7 @@ export default function App() {
                               <li><strong>AI 算法实践力:</strong> 熟练掌握 PyTorch，具备从模型微调 (LoRA) 到复杂架构 (Transformer, ResNet) 的实战经验。</li>
                               <li><strong>全栈工程思维:</strong> 不局限于算法，能独立完成从后端 API (FastAPI) 到前端交互 (React/Tailwind) 的完整产品交付。</li>
                               <li><strong>多智能体架构:</strong> 深入理解并应用 LangGraph，能设计复杂的 Multi-Agent 协同工作流。</li>
-                              <li><strong>快速学习与英文能力:</strong> CET-4 636分，CET-6 530分，无障碍阅读最新英文 Paper 与技术文档，保持对前沿技术的敏锐嗅觉。</li>
+                              <li><strong>快速学习与英文能力:</strong> CET-4 636分，CET-6 530分，IELTS 6.0，无障碍阅读最新英文 Paper 与技术文档，保持对前沿技术的敏锐嗅觉。</li>
                               <li><strong>主观能动性强:</strong> 善于主动学习相关内容，对于工作/学习所需要的东西能很好安排自主学习，快速上手。同时对于新兴技术部保持开放接受状态，能快速跟上技术革新与发展。积极探索如Openclaw、Skills、MCP、Prompt Engineering等创新新项目~</li>
                           </ul>
                       </div>
@@ -1211,7 +1219,7 @@ export default function App() {
                               <div className="card-icon">📚</div>
                           </div>
                           <h3 className="brutal-font">终身学习</h3>
-                          <p className="bold-cn">保持对未知的好奇心。持续精进英语能力（CET-6），深入探索概率论等数学基础，并自学日语，拓宽文化与技术的视野边界。</p>
+                          <p className="bold-cn">保持对未知的好奇心。持续精进语言能力（雅思IELTS），深入探索概率论等数学基础，并自学日语，拓宽文化与技术的视野边界。</p>
                       </div>
 
                       <div 
@@ -1292,7 +1300,7 @@ export default function App() {
                                           return (
                                           <div key={i} className={`border-4 border-black p-4 w-full text-left ${bgColor} hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all`}>
                                               <div className="text-xs font-black mb-1 opacity-70 uppercase tracking-widest">{label}</div>
-                                              <div className="font-bold text-base md:text-lg leading-snug">{ev.text}</div>
+                                              <div className="font-bold text-base md:text-lg leading-snug whitespace-pre-wrap">{ev.text}</div>
                                           </div>
                                           );
                                       })}
